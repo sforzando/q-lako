@@ -1,8 +1,14 @@
 {
-    "cSpell.words": [
-        "lako",
-        "q",
-        "q lako"
-    ],
-    "python.pythonPath": "/Users/suzuki/Workspace/github.com/sforzando/q-lako/venv/bin/python3"
+  "cSpell.words": [
+    "airtable",
+    "dotenv",
+    "key",
+    "lako",
+    "pytest",
+    "q-lako",
+    "yubi",
+    "yubi key"
+  ],
+  "python.pythonPath": "./venv/bin/python3",
+  "python.formatting.provider": "autopep8"
 }

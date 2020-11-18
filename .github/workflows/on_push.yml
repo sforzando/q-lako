@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Decrypt secret
+        run: gpg --quiet --batch --decrypt --passphrase="${{ secrets.GPG_SECRET_PASSPHRASE }}" --output=.env .env.gpg
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
