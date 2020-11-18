@@ -13,7 +13,7 @@ airtable_dictionary = {
             }
         ],
     "Maker": "ソニー・インタラクティブエンタテインメント",
-    "Category": "video game",
+    "Category": "Video game",
     "Released date": "2020-10-31",
     "Description": "圧巻のスピード:統合I/O(Integrated I/O)により、カスタムされたCPU・GPU・SSDがその力を発揮。",
         "Default position": "渡邉宅",
@@ -31,8 +31,12 @@ def airtable_client():
 
 
 def test_register(airtable_client):
-    assert not airtable_client.register_table(airtable_dictionary)
+    """Testing whether a dictionary with the proper field names can be registered correctly."""
+
+    assert airtable_client.register_table(airtable_dictionary)
 
 
-def test_fetch_asin_list(airtable_client):
-    assert airtable_client.fetch_asin_list()
+def test_register_illegal(airtable_client):
+    """Testing when a non-existent field name is registered."""
+
+    assert not airtable_client.register_table({"test": "test"})
