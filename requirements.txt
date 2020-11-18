@@ -5,3 +5,4 @@ Flask
 google-cloud-logging
 pytest
 pytest-cov
+airtable-python-wrapper
