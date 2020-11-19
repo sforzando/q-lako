@@ -34,5 +34,12 @@ class AirtableClient:
             return True
 
     def fetch_asin_list(self):
+        """Get the ASIN code stored in Airtable.
+
+        Retruns:
+            asin_list (list): List of ASIN codes stored in Airtable.
+
+        """
+
         asset_list = self.airtable_client.get_all(fields="Asset code")
         return [asset["fields"]["Asset code"] for asset in asset_list]
