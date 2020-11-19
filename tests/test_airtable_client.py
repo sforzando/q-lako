@@ -40,3 +40,9 @@ def test_register_illegal(airtable_client):
     """Testing when a non-existent field name is registered."""
 
     assert not airtable_client.register_table({"test": "test"})
+
+
+def test_fetch_airtable(airtable_client):
+    """Testing get the registered ASIN code."""
+
+    assert airtable_client.fetch_asin_list()

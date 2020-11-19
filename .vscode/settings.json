@@ -1,11 +1,20 @@
 {
   "cSpell.words": [
+    "ARCHFLAGS",
+    "Kashimada",
+    "Shin'ichiro",
+    "Tomoya",
+    "Watanabe",
     "airtable",
+    "algo",
+    "codecov",
     "dotenv",
+    "envgpg",
     "key",
     "lako",
     "pytest",
     "q-lako",
+    "venv",
     "yubi",
     "yubi key"
   ],

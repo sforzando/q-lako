@@ -32,3 +32,7 @@ class AirtableClient:
             return False
         else:
             return True
+
+    def fetch_asin_list(self):
+        asset_list = self.airtable_client.get_all(fields="Asset code")
+        return [asset["fields"]["Asset code"] for asset in asset_list]
