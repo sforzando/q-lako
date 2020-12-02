@@ -3,7 +3,6 @@
 [![On push](https://github.com/sforzando/q-lako/workflows/On%20push/badge.svg)](https://github.com/sforzando/q-lako/actions?query=workflow%3A%22On+push%22)
 [![CodeQL](https://github.com/sforzando/q-lako/workflows/CodeQL/badge.svg)](https://github.com/sforzando/q-lako/actions?query=workflow%3ACodeQL)
 [![codecov](https://codecov.io/gh/sforzando/q-lako/branch/master/graph/badge.svg)](https://codecov.io/gh/sforzando/q-lako)
-
 ![logo](https://user-images.githubusercontent.com/32637762/97838815-53fc3d80-1d24-11eb-8668-58037a4a61a7.png)
 
 q-lako is a service to quickly register equipments and books.
