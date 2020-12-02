@@ -2,11 +2,14 @@
 
 [![On push](https://github.com/sforzando/q-lako/workflows/On%20push/badge.svg)](https://github.com/sforzando/q-lako/actions?query=workflow%3A%22On+push%22)
 [![CodeQL](https://github.com/sforzando/q-lako/workflows/CodeQL/badge.svg)](https://github.com/sforzando/q-lako/actions?query=workflow%3ACodeQL)
-[![codecov](https://codecov.io/gh/sforzando/q-lako/branch/master/graph/badge.svg)](https://codecov.io/gh/sforzando/q-lako)
+[![codecov](https://codecov.io/gh/yusuke-sforzando/q-lako/branch/main/graph/badge.svg?token=aDS6wgB3Hn)](https://codecov.io/gh/yusuke-sforzando/q-lako)
+
 ![logo](https://user-images.githubusercontent.com/32637762/97838815-53fc3d80-1d24-11eb-8668-58037a4a61a7.png)
 
 q-lako is a service to quickly register equipments and books.
+q-lako is a web app that helps you to manage books and supplies purchased on Amazon.
 
+- [Retrievable information](#retrievable-information)
 - [Requirements](#requirements)
 - [How to](#how-to)
   - [Enter Python Virtual Environment](#enter-python-virtual-environment)
@@ -17,6 +20,24 @@ q-lako is a service to quickly register equipments and books.
   - [Test](#test)
 - [Misc](#misc)
   - [Contributor](#contributor)
+
+## Retrievable information
+
+Get the following information on purchased books and supplies to help you register supplies.
+
+- Product Title
+- ASIN Code
+- Image (url)
+- URL
+- Manufacturer
+- Contributors
+- Publication Date
+- Product Group
+- Registrants Name
+- Default Positions
+- Current Positions
+- Note
+- Features
 
 ## Requirements
 
@@ -82,6 +103,14 @@ python main.py
 ```
 
 If you start it locally, it will start in **Debug** mode.
+
+1. Access to `http://0.0.0.0:8888/`
+1. Enter keywords or ISBN/ASIN code in the search window and press the search button
+1. Displays a list of items related to the keywords you have entered
+1. Select any item from the list of items and press the Select button
+1. The item's details are displayed
+1. Edit the contents of the item's details form
+1. Press the Register button and you will be registered with Airtable
 
 ### Lint
 
