@@ -1,0 +1,93 @@
+{% extends "_base.html" %}
+{% block main %}
+<div>
+    <h1 class="text-3xl theme-color-gray font-bold m-2 text-center">Registration details</h1>
+</div>
+
+<form action="/register_airtable" method="post">
+    <h2 class="text-2xl theme-color-gray font-bold m-2 text-center">{{ product.title }}</h2>
+    <div class="">
+        <div class="flex space-x-4">
+            <div class="m-8 mx-48 text-xl my-8">
+                <div>
+                    <input class="w-full" type="hidden" name="title" id="title_id" value="{{ product.title }}" />
+                </div>
+                <div>
+                    <label for="asin">ASIN Code:</label>
+                    <input type="text" name="asin" id="asin" value="{{ product.asin }}" />
+                </div>
+                <div>
+                    <label for="manufacturer">Manufacturer:</label>
+                    <input type="text" name="manufacturer" id="manufacturer" value="{{ product.info.manufacturer }}" />
+                </div>
+                <div>
+                    <label for="contributors">Contributors:</label>
+                    <input type="text" name="contributors" id="contributors" value="{{ product.info.contributors }}" />
+                </div>
+                <div>
+                    <label for="publication_date">Publication_date:</label>
+                    <input type="text" name="publication_date" id="publication_date" value="{{ product.info.publication_date }}" />
+                </div>
+                <div>
+                    <label for="product_group">Product_group:</label>
+                    <input type="text" name="product_group" id="product_group" value="{{ product.info.product_group }}" />
+                </div>
+                <div>
+                    <label for="registrants_name">Registrants_name:</label>
+                    <select name="registrants_name" id="registrants_name">
+            <option value="yusuke-sforzando">yusuke-sforzando</option>
+            <option value="tomoya-sforzando">tomoya-sforzando</option>
+            <option value="shin-sforzando">shin-sforzando</option>
+          </select>
+                </div>
+                <div>
+                    <label for="default_positions">Default positions:</label>
+                    <select name="default_positions" id="default_positions">
+              <option value="sforzando-kawasaki">sforzando Kawasaki</option>
+              <option value="yusuke-house">yusuke house</option>
+              <option value="tomoya-house">tomoya house</option>
+              <option value="shin-house">shin house</option>
+            </select>
+                </div>
+                <div>
+                    <label for="current_positions">Current positions:</label>
+                    <select name="current_positions" id="current_positions">
+              <option value="sforzando-kawasaki">sforzando Kawasaki</option>
+              <option value="yusuke-house">yusuke house</option>
+              <option value="tomoya-house">tomoya house</option>
+              <option value="shin-house">shin house</option>
+            </select>
+                </div>
+            </div>
+            <div class="my-16">
+                <image class="w-1/2" src="{{ product.images.large }}" alt="image of {{ product.title }}" />
+                <label for="image_url"></label>
+                <input type="hidden" name="image_url" id="image_url" value="{{ product.images.large }}" />
+                <div>
+                    <a href="{{ product.url }}" class="cursor-pointer ml-2 mt-5 px-10 py-2 theme-bg-color-blue rounded-full">View on Amazon</a>
+                    <input type="hidden" name="url" id="url" value="{{ product.url }}" />
+                </div>
+            </div>
+
+        </div>
+        <div class="text-center">
+            <label for="note_id" class="block ">Note: </label>
+            <textarea class="form-textarea mx-auto block w-3/4 text-center" rows="3" type="text" name="note" id="note_id" value="None" placeholder="Enter some long form content."></textarea>
+        </div>
+        <div class="text-center">
+            <label for="features" class="block">Features:</label>
+            <textarea class="form-textarea mt-1 mx-auto block text-center w-3/4" rows="6" type="text" name="features" id="features" value="{{ product.product.features }}">{{ product.product.features }}</textarea>
+        </div>
+
+
+        <div class="text-center">
+            <input class="cursor-pointer ml-2 mt-5 px-10 py-2 theme-bg-color-blue rounded-full" type="button" value="Cancel" onClick="history.back()" />
+            <input class="cursor-pointer ml-2 mt-5 px-10 py-2 theme-bg-color-blue rounded-full" type="submit" value="Register" />
+        </div>
+
+    </div>
+
+
+</form>
+
+{% endblock %}
