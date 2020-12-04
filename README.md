@@ -94,6 +94,10 @@ theme_color_gray=#393e46
 
 [AIRTABLE]
 airtable_table_name=q-lako
+
+[ASSET-PROPERTY]
+positions=sforzando Kawasaki,shin house,tomoya house,yusuke house
+registrants=shin-sforzando,tomoya-sforzando,yusuke-sforzando
 ```
 
 ### Run
