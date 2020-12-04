@@ -19,6 +19,7 @@
             name="title"
             id="title_id"
             value="{{ product.title }}"
+            required
           />
         </div>
         <div>
@@ -63,7 +64,7 @@
         </div>
         <div>
           <label for="registrants_name">Registrants_name:</label>
-          <input list="registrants" name="registrants_name" id="registrants_name" />
+          <input list="registrants" name="registrants_name" id="registrants_name" required />
           <datalist id="registrants">
             {% for registrant in config.ASSET_REGISTRANTS %}
             <option value="{{ registrant }}">
@@ -72,7 +73,7 @@
         </div>
         <div>
           <label for="default_positions">Default positions:</label>
-          <input list="positions" name="default_positions" id="default_positions" />
+          <input list="positions" name="default_positions" id="default_positions" required />
           <datalist id="positions">
           {% for position in config.ASSET_POSITIONS %}
           <option value="{{ position }}">{{ position }}</option>
@@ -81,7 +82,7 @@
         </div>
         <div>
           <label for="current_positions">Current positions:</label>
-          <input list="positions" name="current_positions" id="current_positions">
+          <input list="positions" name="current_positions" id="current_positions" required />
         </div>
       </div>
       <div class="my-16">
