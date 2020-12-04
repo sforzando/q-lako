@@ -63,27 +63,25 @@
         </div>
         <div>
           <label for="registrants_name">Registrants_name:</label>
-          <select name="registrants_name" id="registrants_name">
+          <input list="registrants" name="registrants_name" id="registrants_name" />
+          <datalist id="registrants">
             {% for registrant in config.ASSET_REGISTRANTS %}
-            <option value="{{ registrant }}">{{ registrant }}</option>
+            <option value="{{ registrant }}">
             {% endfor %}
-          </select>
+          </datalist>
         </div>
         <div>
           <label for="default_positions">Default positions:</label>
-          <select name="default_positions" id="default_positions">
-            {% for position in config.ASSET_POSITIONS %}
-            <option value="{{ position }}">{{ position }}</option>
-            {% endfor %}
-          </select>
+          <input list="positions" name="default_positions" id="default_positions" />
+          <datalist id="positions">
+          {% for position in config.ASSET_POSITIONS %}
+          <option value="{{ position }}">{{ position }}</option>
+          {% endfor %}
+          </datalist>
         </div>
         <div>
           <label for="current_positions">Current positions:</label>
-          <select name="current_positions" id="current_positions">
-            {% for position in config.ASSET_POSITIONS %}
-            <option value="{{ position }}">{{ position }}</option>
-            {% endfor %}
-          </select>
+          <input list="positions" name="current_positions" id="current_positions">
         </div>
       </div>
       <div class="my-16">
