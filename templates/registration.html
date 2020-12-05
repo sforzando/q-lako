@@ -7,7 +7,7 @@
 
 <form action="/register_airtable" method="post">
   <h2 class="text-2xl theme-color-gray font-bold m-2 text-center">
-    {{ product.title }}
+    {{ session.product.title }}
   </h2>
   <div class="">
     <div class="flex space-x-4">
@@ -18,13 +18,13 @@
             type="hidden"
             name="title"
             id="title_id"
-            value="{{ product.title }}"
+            value="{{ session.product.title }}"
             required
           />
         </div>
         <div>
           <label for="asin">ASIN Code:</label>
-          <input type="text" name="asin" id="asin" value="{{ product.asin }}" />
+          <input type="text" name="asin" id="asin" value="{{ session.product.asin }}" />
         </div>
         <div>
           <label for="manufacturer">Manufacturer:</label>
@@ -32,7 +32,7 @@
             type="text"
             name="manufacturer"
             id="manufacturer"
-            value="{{ product.info.manufacturer }}"
+            value="{{ session.product.info.manufacturer }}"
           />
         </div>
         <div>
@@ -41,7 +41,7 @@
             type="text"
             name="contributors"
             id="contributors"
-            value="{{ product.info.contributors }}"
+            value="{{ session.product.info.contributors }}"
           />
         </div>
         <div>
@@ -50,7 +50,7 @@
             type="text"
             name="publication_date"
             id="publication_date"
-            value="{{ product.info.publication_date }}"
+            value="{{ session.product.info.publication_date }}"
           />
         </div>
         <div>
@@ -59,7 +59,7 @@
             type="text"
             name="product_group"
             id="product_group"
-            value="{{ product.info.product_group }}"
+            value="{{ session.product.info.product_group }}"
           />
         </div>
         <div>
@@ -88,24 +88,24 @@
       <div class="my-16">
         <image
           class="w-1/2"
-          src="{{ product.images.large }}"
-          alt="image of {{ product.title }}"
+          src="{{ session.product.images.large }}"
+          alt="image of {{ session.product.title }}"
         />
         <label for="image_url"></label>
         <input
           type="hidden"
           name="image_url"
           id="image_url"
-          value="{{ product.images.large }}"
+          value="{{ session.product.images.large }}"
         />
         <div>
           <a
-            href="{{ product.url }}"
+            href="{{ session.product.url }}"
             class="cursor-pointer ml-2 mt-5 px-10 py-2 theme-bg-color-blue rounded-full"
             >
           View on Amazon
           </a>
-          <input type="hidden" name="url" id="url" value="{{ product.url }}" />
+          <input type="hidden" name="url" id="url" value="{{ session.product.url }}" />
         </div>
       </div>
     </div>
@@ -129,9 +129,9 @@
         type="text"
         name="features"
         id="features"
-        value="{{ product.product.features }}"
+        value="{{ session.product.product.features }}"
       >
-      {{ product.product.features }}
+      {{ session.product.product.features }}
       </textarea>
     </div>
 
