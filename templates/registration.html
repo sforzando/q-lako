@@ -13,7 +13,7 @@
         </div>
         <div class="mt-4">
           <button class="cursor-pointer px-10 py-2 bg-gray-200 rounded-full"
-            onclick="location.href='{{ session.product.url }}'">
+            onclick="window.open('{{ session.product.url }}', '_blank')">
             View on Amazon
           </button>
           <input type="hidden" name="url" value="{{ session.product.url }}" />
