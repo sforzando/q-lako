@@ -10,33 +10,26 @@ from asset import Asset
 from flash_message import FlashMessage, FlashCategories
 
 
-def clear_session():
-    session.pop("keyword", None)
-    session.pop("product_list", None)
-    session.pop("product", None)
-
-
 @app.route("/", methods=["GET"])
 def index():
     app.logger.info("index(): GET /")
-    clear_session()
     return render_template("index.html")
 
 
 @app.route("/search", methods=["GET"])
 def search():
     app.logger.info(f"search(): GET {request.full_path}")
-    session["keyword"] = request.args.get('query', None)
+    keyword = request.args.get('query', None)
 
-    if not session.get("keyword", None):
+    if not keyword:
         return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
 
     context_dict = {
         "subtitle": f"Search results for {session.get('keyword', None)}",
-        "keyword": session.get("keyword", None)
+        "keyword": keyword
     }
     try:
-        product_list = amazon_api_client.search_products(keywords=session.get("keyword", None))
+        product_list = amazon_api_client.search_products(keywords=keyword)
         session["product_list"] = product_list if product_list else []
         return render_template("search.html", **context_dict)
     except AmazonException as ae:
@@ -61,7 +54,6 @@ def registration():
             url_for("index"))
 
     context_dict = {}
-    session.pop("product", None)
     for product in session["product_list"]:
         if product.asin == asin:
             if product.info.contributors:
@@ -70,9 +62,9 @@ def registration():
             if product.product.features:
                 product.product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"
-            session["product"] = product
+            context_dict["product"] = product
 
-    if session.get("product", None):
+    if context_dict.get("product", None):
         return render_template("registration.html", **context_dict)
     else:
         return FlashMessage.show_with_redirect(
