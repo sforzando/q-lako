@@ -17,20 +17,22 @@ def index():
 
 @app.route("/search", methods=["GET"])
 def search():
-    app.logger.info(f"search(): GET /{request.full_path}")
+    app.logger.info(f"search(): GET {request.full_path}")
+    keyword = request.args.get('query', None)
     context_dict = {
-        "subtitle": "Search results for {{ keyword }}",
-        "keyword": request.args.get("query", None)
+        "subtitle": f"Search results for {keyword}",
+        "keyword": keyword
     }
-    if context_dict["keyword"]:
-        try:
-            session["product_list"] = amazon_api_client.search_products(keywords=context_dict["keyword"])
-        except AmazonException as ae:
-            app.logger.error(f"{ae}")
-            raise ae
-        return render_template("search.html", **context_dict, product_list=session["product_list"])
-    else:
+    if not keyword:
         return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
+    else:
+        try:
+            product_list = amazon_api_client.search_products(keywords=keyword)
+            session["product_list"] = product_list if product_list else []
+            return render_template("search.html", **context_dict)
+        except AmazonException as ae:
+            app.logger.error(ae)
+            return FlashMessage.show_with_redirect(f"Error occurred. {ae}", FlashCategories.ERROR, url_for("index"))
 
 
 @ app.route("/registration", methods=["GET", "POST"])
@@ -50,7 +52,8 @@ def registration():
             if product.asin == asin:
                 session["asset"] = product
                 if product.info.contributors:
-                    product.info.contributors = ",".join([contributor.name for contributor in product.info.contributors])
+                    product.info.contributors = ",".join(
+                        [contributor.name for contributor in product.info.contributors])
                 if product.product.features:
                     product.product.features = ",".join(product.product.features)
 
