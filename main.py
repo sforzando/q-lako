@@ -3,6 +3,7 @@
 from amazon.exception import AmazonException
 from flask import request, render_template, url_for, session
 
+import requests
 from __init__ import app, amazon_api_client
 from asset import Asset
 from airtable_client import AirtableClient
@@ -43,7 +44,7 @@ def search():
         return FlashMessage.show_with_redirect(f"Error occurred. {ae}", FlashCategories.ERROR, url_for("index"))
 
 
-@ app.route("/registration", methods=["GET", "POST"])
+@app.route("/registration", methods=["GET", "POST"])
 def registration():
     if request.method == "GET":
         app.logger.info(f"registration: GET {request.full_path}")
@@ -67,7 +68,6 @@ def registration():
                 product.info.contributors = ", ".join(
                     [contributor.name for contributor in product.info.contributors])
             if product.product.features:
-                print(f"{product.product.features=}")
                 product.product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"
             session["product"] = product
@@ -85,12 +85,17 @@ def registration():
 def register_airtable():
     app.logger.info("register_airtable(): POST /register_airtable")
     app.logger.debug(f"{request.form=}")
-    posted_asset = request.form.to_dict() if request.form else{}
+    posted_asset = request.form.to_dict() if request.form else {}
 
     def convert_str_none_int_0(n: str) -> int:
         return 0 if n == "None" else n
 
-    if posted_asset:
+    if not posted_asset:
+        return FlashMessage.show_with_redirect(
+            "Registration failed. Please try the procedure again from the beginning, sorry for the inconvenience.",
+            FlashCategories.WARNING,
+            url_for("index"))
+    else:
         registrable_asset = Asset(
             title=posted_asset.get("title", None),
             asin=posted_asset.get("asin", None),
@@ -105,15 +110,21 @@ def register_airtable():
             current_position=posted_asset.get("current_positions", None),
             note=posted_asset.get("note", None),
             registrant_name=posted_asset.get("registrants_name", None))
+
+    context_dict = {
+        "subtitle": posted_asset.get("title", None)
+    }
+    try:
         AirtableClient().register_asset(registrable_asset)
         app.logger.info(f"Registration completed! {registrable_asset=}")
         return FlashMessage.show_with_redirect("Registration completed!", FlashCategories.INFO, url_for("index"))
-    else:
-        context_dict = {
-            "subtitle": posted_asset.get("title", None)
-        }
-        app.logger.debug(f"{context_dict}=")
-        return FlashMessage.show_with_render_template("Registration failed.", FlashCategories.ERROR,
+    except requests.exceptions.HTTPError as he:
+        app.logger.error(he)
+        return FlashMessage.show_with_render_template(f"Registration failed. {he}", FlashCategories.ERROR,
+                                                      "registration.html", **context_dict)
+    except TypeError as te:
+        app.logger.error(te)
+        return FlashMessage.show_with_render_template(f"Registration failed. {te}", FlashCategories.ERROR,
                                                       "registration.html", **context_dict)
 
 
