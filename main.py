@@ -25,7 +25,7 @@ def search():
         return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
 
     context_dict = {
-        "subtitle": f"Search results for {session.get('keyword', None)}",
+        "subtitle": f"Search results for {keyword}",
         "keyword": keyword
     }
     try:
