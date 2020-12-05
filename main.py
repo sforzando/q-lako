@@ -29,7 +29,7 @@ def search():
         "keyword": keyword
     }
     try:
-        product_list = amazon_api_client.search_products(keywords=keyword)
+        product_list = amazon_api_client.search_products(keywords=keyword, item_count=30)
         session["product_list"] = product_list if product_list else []
         return render_template("search.html", **context_dict)
     except AmazonException as ae:
