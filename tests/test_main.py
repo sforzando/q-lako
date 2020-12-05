@@ -1,8 +1,7 @@
 import pytest
-
+from werkzeug.datastructures import ImmutableMultiDict
 
 from main import app
-from werkzeug.datastructures import ImmutableMultiDict
 
 
 @pytest.fixture

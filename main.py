@@ -1,12 +1,12 @@
 # !/usr/bin/env python3
 
+import requests
 from amazon.exception import AmazonException
 from flask import request, render_template, url_for, session
 
-import requests
 from __init__ import app, amazon_api_client
-from asset import Asset
 from airtable_client import AirtableClient
+from asset import Asset
 from flash_message import FlashMessage, FlashCategories
 
 
@@ -87,7 +87,10 @@ def register_airtable():
     app.logger.debug(f"{request.form=}")
     posted_asset = request.form.to_dict() if request.form else {}
 
-    def convert_str_none_int_0(n: str) -> int:
+    from typing import Union
+    U = Union[str, int]
+
+    def convert_str_none_int_0(n: U) -> U:
         return 0 if n == "None" else n
 
     if not posted_asset:
@@ -129,5 +132,4 @@ def register_airtable():
 
 
 if __name__ == "__main__":
-
     app.run(host="0.0.0.0", port=8888)
