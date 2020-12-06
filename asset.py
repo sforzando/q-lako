@@ -28,3 +28,6 @@ class Asset:
             self.asset_id = round(datetime.timestamp(now))
         if not self.registered_at:
             self.registered_at = datetime.now(tz_jst).isoformat()
+        if type(self.publication_date) and not self.publication_date:
+            print(f"{type(self.publication_date)=}\n{self.publication_date=}")
+            self.publication_date = None
