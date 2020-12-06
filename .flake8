@@ -8,4 +8,3 @@ exclude =
 max-line-length = 119
 show-source = True
 statistics = True
-ignore=H101,H301,H306
