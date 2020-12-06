@@ -2,7 +2,7 @@
 
 [![On push](https://github.com/sforzando/q-lako/workflows/On%20push/badge.svg)](https://github.com/sforzando/q-lako/actions?query=workflow%3A%22On+push%22)
 [![CodeQL](https://github.com/sforzando/q-lako/workflows/CodeQL/badge.svg)](https://github.com/sforzando/q-lako/actions?query=workflow%3ACodeQL)
-[![codecov](https://codecov.io/gh/yusuke-sforzando/q-lako/branch/main/graph/badge.svg?token=aDS6wgB3Hn)](https://codecov.io/gh/yusuke-sforzando/q-lako)
+[![codecov](https://codecov.io/gh/sforzando/q-lako/branch/main/graph/badge.svg?token=NSRZFH0DW1)](https://codecov.io/gh/sforzando/q-lako)
 
 ![logo](https://user-images.githubusercontent.com/32637762/97838815-53fc3d80-1d24-11eb-8668-58037a4a61a7.png)
 
@@ -94,6 +94,10 @@ theme_color_gray=#393e46
 
 [AIRTABLE]
 airtable_table_name=q-lako
+
+[ASSET-PROPERTY]
+positions=sforzando Kawasaki,shin house,tomoya house,yusuke house
+registrants=shin-sforzando,tomoya-sforzando,yusuke-sforzando
 ```
 
 ### Run
