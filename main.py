@@ -39,6 +39,11 @@ def search():
 
 @app.route("/registration", methods=["GET", "POST"])
 def registration():
+   #  TODO: Fetch Airtable
+
+
+
+
     context_dict = {}
     if request.method == "GET":
         app.logger.info(f"registration: GET {request.full_path}")

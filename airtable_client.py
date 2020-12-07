@@ -36,3 +36,13 @@ class AirtableClient:
         except TypeError as te:
             app.logger.error(te)
             raise te
+
+    def fetch_table(self):
+
+        try:
+            return self.airtable_client.get_all(view=app.config["AIRTABLE_VIEW_NAME"],fields=app.config["FETCH_FIELD_NAME"])
+        except requests.exceptions.HTTPError as he:
+            app.logger.error(he)
+            raise he
+
+
