@@ -51,6 +51,7 @@ def test_register_non_existent_key(airtable_client):
     with pytest.raises(TypeError):
         airtable_client.register_asset({"test": "test"})
 
+
 def test_fetch_table(airtable_client):
     """Testing fetch list of currently registered items from Airtable."""
 

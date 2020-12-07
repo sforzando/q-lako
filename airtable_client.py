@@ -38,6 +38,13 @@ class AirtableClient:
             raise te
 
     def fetch_table(self):
+        """Fetch Airtable item list.
+
+        Fetch the items stored in Airtable.
+
+        Returns:
+            A list of items with any field name stored in Airtable.
+        """
 
         try:
             return self.airtable_client.get_all(view=app.config["AIRTABLE_VIEW_NAME"],

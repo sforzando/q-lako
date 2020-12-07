@@ -4,6 +4,7 @@ flake8
 Flask
 Flask-Session
 #Flask-MonitoringDashboard
+fuzzysearch
 google-cloud-logging
 pytest
 pytest-cov

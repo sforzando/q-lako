@@ -69,6 +69,12 @@ def registration():
             session["product"] = product
 
     if session.get("product", None):
+        fetch_airtable = AirtableClient().fetch_table()
+        airtable_item_list = [airtable_item["fields"]["title"] for airtable_item in fetch_airtable]
+        if session["product"].title in airtable_item_list:
+            app.logger.info("A similar item!")
+        else:
+            app.logger.info("Not a similar item!")
         return render_template("registration.html", **context_dict)
     else:
         return FlashMessage.show_with_redirect(
