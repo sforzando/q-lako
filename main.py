@@ -74,7 +74,11 @@ def registration():
             session["product"] = product
 
     if session.get("product", None):
-        return render_template("registration.html", **context_dict)
+        # return render_template("registration.html", **context_dict)
+        return FlashMessage.show_with_redirect(
+            "Similar items have already been registered.",
+            FlashCategories.INFO,
+            url_for("registration"))
     else:
         return FlashMessage.show_with_redirect(
             "Please try the procedure again from the beginning, sorry for the inconvenience.",
