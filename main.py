@@ -39,11 +39,6 @@ def search():
 
 @app.route("/registration", methods=["GET", "POST"])
 def registration():
-   #  TODO: Fetch Airtable
-
-
-
-
     context_dict = {}
     if request.method == "GET":
         app.logger.info(f"registration: GET {request.full_path}")
@@ -74,11 +69,7 @@ def registration():
             session["product"] = product
 
     if session.get("product", None):
-        # return render_template("registration.html", **context_dict)
-        return FlashMessage.show_with_redirect(
-            "Similar items have already been registered.",
-            FlashCategories.INFO,
-            url_for("registration"))
+        return render_template("registration.html", **context_dict)
     else:
         return FlashMessage.show_with_redirect(
             "Please try the procedure again from the beginning, sorry for the inconvenience.",
