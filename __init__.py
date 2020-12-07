@@ -5,7 +5,9 @@ from configparser import ConfigParser
 from amazon.paapi import AmazonAPI
 from dotenv import load_dotenv
 from flask import Flask
+from flask_login import LoginManager
 from flask_session import Session
+from user import User
 
 load_dotenv(verbose=True)
 config_parser = ConfigParser()
@@ -13,6 +15,18 @@ config_parser.read("settings.ini", encoding="utf8")
 
 app = Flask(__name__)
 app.secret_key = secrets.token_bytes(32)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+login_manager.login_message = u"Please Log in."
+login_manager.login_message_category = "info"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
+
 
 SESSION_TYPE = "filesystem"
 SESSION_FILE_DIR = "/tmp"

@@ -2,6 +2,7 @@ airtable-python-wrapper
 autopep8
 flake8
 Flask
+Flask-Login
 Flask-Session
 #Flask-MonitoringDashboard
 google-cloud-logging

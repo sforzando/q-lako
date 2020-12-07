@@ -3,6 +3,7 @@
 import requests
 from amazon.exception import AmazonException
 from flask import request, render_template, url_for, session
+from flask_login import login_required
 
 from __init__ import app, amazon_api_client
 from airtable_client import AirtableClient
@@ -10,13 +11,21 @@ from asset import Asset
 from flash_message import FlashMessage, FlashCategories
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == "GET":
+        return render_template("login.html")
+
+
 @app.route("/", methods=["GET"])
+@login_required
 def index():
     app.logger.info("index(): GET /")
     return render_template("index.html")
 
 
 @app.route("/search", methods=["GET"])
+@login_required
 def search():
     app.logger.info(f"search(): GET {request.full_path}")
     keyword = request.args.get('query', None)
@@ -38,6 +47,7 @@ def search():
 
 
 @app.route("/registration", methods=["GET", "POST"])
+@login_required
 def registration():
     context_dict = {}
     if request.method == "GET":
@@ -78,6 +88,7 @@ def registration():
 
 
 @app.route("/register_airtable", methods=["POST"])
+@login_required
 def register_airtable():
     app.logger.info("register_airtable(): POST /register_airtable")
     app.logger.debug(f"{request.form=}")
