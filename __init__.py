@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_login import LoginManager
 from flask_session import Session
+
 from user import User
 
 load_dotenv(verbose=True)
@@ -21,12 +22,6 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 login_manager.login_message = u"Please Log in."
 login_manager.login_message_category = "info"
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
-
 
 SESSION_TYPE = "filesystem"
 SESSION_FILE_DIR = "/tmp"
@@ -67,3 +62,8 @@ else:
         dashboard.bind(app)
     except ImportError as ie:
         app.logger.warning(f"{ie}")
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)

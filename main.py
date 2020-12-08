@@ -1,20 +1,42 @@
 # !/usr/bin/env python3
 
+import hashlib
+import os
+
 import requests
 from amazon.exception import AmazonException
-from flask import request, render_template, url_for, session
-from flask_login import login_required
+from flask import redirect, request, render_template, url_for, session
+from flask_login import login_required, login_user, logout_user, current_user
 
 from __init__ import app, amazon_api_client
 from airtable_client import AirtableClient
 from asset import Asset
 from flash_message import FlashMessage, FlashCategories
+from user import User
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+
     if request.method == "GET":
         return render_template("login.html")
+    else:
+        print(f"{request.args.get('next')=}")
+        user_id = request.form.get("user_id", "dummy")
+        password = hashlib.sha256(request.form.get("password", "dummy").encode("UTF-8")).hexdigest()
+        if user_id == os.getenv("user_id", None) and password == os.getenv("password", None):
+            login_user(User(user_id))
+            return redirect(url_for("index"))
+        else:
+            return FlashMessage.show_with_redirect("Log in failed.", FlashCategories.WARNING, url_for("login"))
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    logout_user()
+    return FlashMessage.show_with_redirect("Log out successfully.", FlashCategories.INFO, url_for("login"))
 
 
 @app.route("/", methods=["GET"])

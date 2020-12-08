@@ -75,6 +75,8 @@ Keep your passphrase in a secure location like [YubiKey](https://www.yubico.com)
     amazon_partner_tag="amazon_partner_tag"
     amazon_access_key="amazon_access_key"
     amazon_secret_key="amazon_secret_key"
+    user_id="user_id"
+    password=""hashed_password"
     ```
 
 1. Encrypt `.env` to create `.env.gpg`
