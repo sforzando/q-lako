@@ -53,6 +53,7 @@ def index():
 def search():
     app.logger.info(f"search(): GET {request.full_path}")
     keyword = request.args.get('query', None)
+    session.pop('_flashes', None)
 
     if not keyword:
         return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
