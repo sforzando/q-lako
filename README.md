@@ -77,9 +77,12 @@ Keep your passphrase in a secure location like [YubiKey](https://www.yubico.com)
    amazon_partner_tag="amazon_partner_tag"
    amazon_access_key="amazon_access_key"
    amazon_secret_key="amazon_secret_key"
-   user_id="user_id"
-   password=""hashed_password"
+   accounts="account_for_test:c169a3744d7fb5cc92f2a00be84fbb937a355eab24238c6689dfdae03f4aa5ec,user_id:password"
    ```
+
+   Note
+     - `accounts` is multiple ID:PASS connected by `,`.
+     - The first ID:PASS (`account_for_test:c169a374…`) will delete on Production environment.
 
 1. Encrypt `.env` to create `.env.gpg`
 

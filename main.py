@@ -1,7 +1,6 @@
 # !/usr/bin/env python3
 
 import hashlib
-import os
 
 import requests
 from amazon.exception import AmazonException
@@ -21,13 +20,15 @@ def login():
         return redirect(url_for("index"))
 
     if request.method == "GET":
+        app.logger.info("login(): GET /login")
         return render_template("login.html")
     else:
-        print(f"{request.args.get('next')=}")
+        app.logger.info("login(): POST /login")
         user_id = request.form.get("user_id", "dummy")
         password = hashlib.sha256(request.form.get("password", "dummy").encode("UTF-8")).hexdigest()
-        if user_id == os.getenv("user_id", None) and password == os.getenv("password", None):
+        if [ID for ID, PASS in app.config["ACCOUNTS"] if ID == user_id and password == password]:
             login_user(User(user_id))
+            app.logger.info(f"{user_id} is logged in.")
             return redirect(url_for("index"))
         else:
             return FlashMessage.show_with_redirect("Log in failed.", FlashCategories.WARNING, url_for("login"))
@@ -35,6 +36,7 @@ def login():
 
 @app.route('/logout', methods=['GET'])
 def logout():
+    app.logger.info("logout(): GET /logout")
     logout_user()
     return FlashMessage.show_with_redirect("Log out successfully.", FlashCategories.INFO, url_for("login"))
 

@@ -38,6 +38,8 @@ amazon_api_client = AmazonAPI(os.getenv("amazon_access_key"),
                               os.getenv("amazon_partner_tag"),
                               "JP")
 
+app.config["ACCOUNTS"] = [ID_PASS.split(":") for ID_PASS in os.getenv("accounts", None).split(",")]
+
 if os.getenv("GAE_ENV", "").startswith("standard"):
     """ Production in GAE """
 
@@ -50,6 +52,10 @@ if os.getenv("GAE_ENV", "").startswith("standard"):
     cloud_logger = logging.getLogger(__name__)
     cloud_logger.setLevel(logging.DEBUG)
     cloud_logger.addHandler(handler)
+
+    # Delete ID_PASS for test
+    del app.config["ACCOUNTS"][0]
+
 else:
     """ Local execution """
 
