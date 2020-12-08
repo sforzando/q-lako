@@ -4,7 +4,9 @@
 [![CodeQL](https://github.com/sforzando/q-lako/workflows/CodeQL/badge.svg)](https://github.com/sforzando/q-lako/actions?query=workflow%3ACodeQL)
 [![codecov](https://codecov.io/gh/sforzando/q-lako/branch/main/graph/badge.svg?token=NSRZFH0DW1)](https://codecov.io/gh/sforzando/q-lako)
 
-![logo](https://user-images.githubusercontent.com/32637762/97838815-53fc3d80-1d24-11eb-8668-58037a4a61a7.png)
+|1. login|2. index|3. search|4. registration|
+|---|---|---|---|
+|![login](https://user-images.githubusercontent.com/40506652/101451732-fb960c80-396f-11eb-8552-c57c695ad741.png)|![index](https://user-images.githubusercontent.com/40506652/101454967-26369400-3975-11eb-938e-e189e31c9fe3.png)|![search](https://user-images.githubusercontent.com/40506652/101453954-8593a480-3973-11eb-9364-6654740cc502.png)|![registration](https://user-images.githubusercontent.com/40506652/101451507-96dab200-396f-11eb-9834-b4cfa5e208c9.png)|
 
 q-lako is a service to quickly register equipments and books.
 q-lako is a web app that helps you to manage books and supplies purchased on Amazon.
@@ -69,23 +71,23 @@ Keep your passphrase in a secure location like [YubiKey](https://www.yubico.com)
 
 1. Prepare `.env`
 
-    ```.env
-    airtable_base_id="airtable_base_id"
-    airtable_api_key="airtable_api_key"
-    amazon_partner_tag="amazon_partner_tag"
-    amazon_access_key="amazon_access_key"
-    amazon_secret_key="amazon_secret_key"
-    user_id="user_id"
-    password=""hashed_password"
-    ```
+   ```.env
+   airtable_base_id="airtable_base_id"
+   airtable_api_key="airtable_api_key"
+   amazon_partner_tag="amazon_partner_tag"
+   amazon_access_key="amazon_access_key"
+   amazon_secret_key="amazon_secret_key"
+   user_id="user_id"
+   password=""hashed_password"
+   ```
 
 1. Encrypt `.env` to create `.env.gpg`
 
-    `gpg --symmetric --cipher-algo AES256 .env`
+   `gpg --symmetric --cipher-algo AES256 .env`
 
 1. Use your passphrase to decrypt `.env.gpg` .
 
-    `gpg --quiet --batch --decrypt --output=.env .env.gpg`
+   `gpg --quiet --batch --decrypt --output=.env .env.gpg`
 
 ### Prepare `settings.ini`
 
