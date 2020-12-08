@@ -48,8 +48,8 @@ def test_GET_registration_direct_access(test_client):
 
 def test_POST_registration_success(test_client):
     test_client.get("/search?query=サーカスTC")
-    response = test_client.post("/registration", data={"asin": "B07XB5WX89"})
-    assert "Registration for details of テンマクデザイン サーカス TC DX" in response.data.decode("UTF-8")
+    response = test_client.post("/registration", data={"asin": "B07B7HG86W"})
+    assert "Registration for details of テンマクデザイン サーカスTC" in response.data.decode("UTF-8")
 
 
 def test_POST_registration_failure(test_client):
