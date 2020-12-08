@@ -3,6 +3,7 @@
 import requests
 from amazon.exception import AmazonException
 from flask import request, render_template, url_for, session
+from fuzzysearch import find_near_matches
 
 from __init__ import app, amazon_api_client
 from airtable_client import AirtableClient
@@ -69,13 +70,14 @@ def registration():
             session["product"] = product
 
     if session.get("product", None):
-        fetch_airtable = AirtableClient().fetch_table()
-        airtable_item_list = [airtable_item["fields"]["title"] for airtable_item in fetch_airtable]
-        if session["product"].title in airtable_item_list:
-            app.logger.info("A similar item!")
-        else:
-            app.logger.info("Not a similar item!")
-        return render_template("registration.html", **context_dict)
+        similar_items = []
+        fetch_airtable = [airtable_item for airtable_item in AirtableClient().fetch_table()]
+        for item in fetch_airtable:
+            if find_near_matches(session["product"].title, item["fields"]["title"], max_l_dist=1) or \
+                    find_near_matches(item["fields"]["title"], session["product"].title, max_l_dist=1):
+                similar_items.append(item)
+        app.logger.info(f"{similar_items=}")
+        return render_template("registration.html", **context_dict, similar_items=similar_items)
     else:
         return FlashMessage.show_with_redirect(
             "Please try the procedure again from the beginning, sorry for the inconvenience.",
