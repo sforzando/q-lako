@@ -17,16 +17,18 @@
           </button>
           <input type="hidden" name="url" value="{{ session.product.url }}" />
         </div>
-        <div class="mt-4">
-          <p class="ml-4 mt-2 text-left px-16 text-2xl">Similar Item</p>
-        </div>
-        <div>
-          {% for item in similar_items %}
-            <p class="text-base theme-color-gray font-bold">{{ item["title"] }}</p>
-            <p class="text-base theme-color-gray font-bold">{{ item["registered_at"][:10] }}</p>
-            <p class="text-base theme-color-gray font-bold">{{ item["registrant_name"] }}</p>
-          {%- endfor %}
-        </div>
+        {% if similar_items %}
+          <div class="mt-4">
+            <p class="ml-4 mt-2 text-left px-16 text-2xl">Similar Item</p>
+          </div>
+          <div>
+            {% for item in similar_items %}
+              <p class="text-base theme-color-gray font-bold">{{ item["title"] }}</p>
+              <p class="text-base theme-color-gray font-bold">{{ item["registered_at"][:10] }}</p>
+              <p class="text-base theme-color-gray font-bold">{{ item["registrant_name"] }}</p>
+            {%- endfor %}
+          </div>
+        {% endif %}
       </div>
       <div class="flex-grow flex-col text-left">
         <div class="mt-2">

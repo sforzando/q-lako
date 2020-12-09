@@ -69,9 +69,7 @@ def registration():
             session["product"] = product
 
     if session.get("product", None):
-        context_dict["similar_items"] = []
-        if session.get("keyword", None):
-            context_dict["similar_items"] = AirtableClient().get_similar_items(session["keyword"])
+        context_dict["similar_items"] = AirtableClient().get_similar_items(session.get("keyword", None))
         app.logger.info(f"{context_dict['similar_items']=}")
         return render_template("registration.html", **context_dict)
     else:

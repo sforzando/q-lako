@@ -50,9 +50,8 @@ class AirtableClient:
 
         similar_items = []
         try:
-            item_list = [item for item in self.airtable_client.get_all(view=app.config["AIRTABLE_VIEW_NAME"],
-                                                                       fields=app.config["FETCH_FIELD_NAME"])]
-            for item in self.airtable_client.get_all(view=app.config["AIRTABLE_VIEW_NAME"], fields=app.config["FETCH_FIELD_NAME"]):
+            for item in self.airtable_client.get_all(view=app.config["AIRTABLE_VIEW_NAME"],
+                                                     fields=app.config["FETCH_FIELD_NAME"]):
                 if find_near_matches(keyword, item["fields"]["title"], max_l_dist=1):
                     similar_items.append(item["fields"])
             return similar_items
