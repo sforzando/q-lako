@@ -45,6 +45,9 @@ class AirtableClient:
         Args:
             field_name (str): Airtable field names.
             field_value (str): The values corresponding to the field names in Airtable.
+
+        Returns:
+            Airtable API response (dict): Dictionary of successful or unsuccessful deletions and IDs of items.
         """
 
         try:
