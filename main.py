@@ -3,7 +3,6 @@
 import requests
 from amazon.exception import AmazonException
 from flask import request, render_template, url_for, session
-from fuzzysearch import find_near_matches
 
 from __init__ import app, amazon_api_client
 from airtable_client import AirtableClient
@@ -20,17 +19,17 @@ def index():
 @app.route("/search", methods=["GET"])
 def search():
     app.logger.info(f"search(): GET {request.full_path}")
-    keyword = request.args.get('query', None)
+    session["keyword"] = request.args.get('query', None)
 
-    if not keyword:
+    if not session["keyword"]:
         return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
 
     context_dict = {
-        "subtitle": f"Search results for {keyword}",
-        "keyword": keyword
+        "subtitle": f"Search results for {session['keyword']}",
+        "keyword": session["keyword"]
     }
     try:
-        product_list = amazon_api_client.search_products(keywords=keyword, item_count=30)
+        product_list = amazon_api_client.search_products(keywords=session["keyword"], item_count=30)
         session["product_list"] = product_list if product_list else []
         return render_template("search.html", **context_dict)
     except AmazonException as ae:
@@ -70,14 +69,11 @@ def registration():
             session["product"] = product
 
     if session.get("product", None):
-        similar_items = []
-        fetch_airtable = [airtable_item for airtable_item in AirtableClient().fetch_table()]
-        for item in fetch_airtable:
-            if find_near_matches(session["product"].title, item["fields"]["title"], max_l_dist=1) or \
-                    find_near_matches(item["fields"]["title"], session["product"].title, max_l_dist=1):
-                similar_items.append(item["fields"])
-        app.logger.info(f"{similar_items=}")
-        return render_template("registration.html", **context_dict, similar_items=similar_items)
+        context_dict["similar_items"] = []
+        if session.get("keyword", None):
+            context_dict["similar_items"] = AirtableClient().get_similar_items(session["keyword"])
+        app.logger.info(f"{context_dict['similar_items']=}")
+        return render_template("registration.html", **context_dict)
     else:
         return FlashMessage.show_with_redirect(
             "Please try the procedure again from the beginning, sorry for the inconvenience.",

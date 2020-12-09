@@ -52,7 +52,7 @@ def test_register_non_existent_key(airtable_client):
         airtable_client.register_asset({"test": "test"})
 
 
-def test_fetch_table(airtable_client):
+def test_get_similar_items(airtable_client):
     """Testing fetch list of currently registered items from Airtable."""
 
-    assert airtable_client.fetch_table()
+    assert airtable_client.get_similar_items("テンマクデザイン")
