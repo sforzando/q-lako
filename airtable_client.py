@@ -52,6 +52,3 @@ class AirtableClient:
         except KeyError as ke:
             app.logger.error(ke)
             raise ke
-        except TypeError as te:
-            app.logger.error(te)
-            raise te
