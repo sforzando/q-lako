@@ -43,7 +43,7 @@ def test_register(airtable_client):
     """Testing whether a dictionary with the proper field names can be registered correctly."""
 
     assert airtable_client.register_asset(registerable_asset)
-    # airtable_client.delete_asset("title", "PlayStation 5 (CFI-1000A01)")
+    assert airtable_client.delete_asset("title", "PlayStation 5 (CFI-1000A01)")
 
 
 def test_register_non_existent_key(airtable_client):
@@ -51,12 +51,6 @@ def test_register_non_existent_key(airtable_client):
 
     with pytest.raises(TypeError):
         airtable_client.register_asset({"test": "test"})
-
-
-def test_delete_asset_success(airtable_client):
-    """Testing remove items with any field name and value."""
-
-    assert airtable_client.delete_asset("title", "PlayStation 5 (CFI-1000A01)")
 
 
 def test_delete_asset_failure(airtable_client):
