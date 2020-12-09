@@ -49,9 +49,9 @@ class AirtableClient:
 
         try:
             return self.airtable_client.delete_by_field(field_name, field_value)
-        except requests.exceptions.HTTPError as he:
-            app.logger.error(he)
-            raise he
+        except KeyError as ke:
+            app.logger.error(ke)
+            raise ke
         except TypeError as te:
             app.logger.error(te)
             raise te
