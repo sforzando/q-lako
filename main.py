@@ -1,5 +1,7 @@
 # !/usr/bin/env python3
 
+from datetime import datetime as dt
+
 import requests
 from amazon.exception import AmazonException
 from flask import request, render_template, url_for, session
@@ -60,6 +62,9 @@ def registration():
 
     for product in session["product_list"]:
         if product.asin == asin:
+            if product.info.publication_date:
+                product.info.publication_date = dt.fromisoformat(
+                    product.info.publication_date[:10]).strftime("%B %d, %Y")
             if product.info.contributors:
                 print(f"{product.info.contributors=}")
                 for contributor in product.info.contributors:
@@ -101,7 +106,8 @@ def register_airtable():
             manufacture=posted_asset.get("manufacturer", None),
             contributor=posted_asset.get("contributors", None),
             product_group=posted_asset.get("product_group", None),
-            publication_date=posted_asset.get("publication_date", None),
+            publication_date=dt.strptime(posted_asset.get("publication_date"), "%B %d, %Y").strftime(
+                "%Y-%m-%d") if posted_asset.get("publication_date", None) else None,
             features=posted_asset.get("features", None),
             default_position=posted_asset.get("default_positions", None),
             current_position=posted_asset.get("current_positions", None),
