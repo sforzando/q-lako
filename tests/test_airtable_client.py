@@ -46,7 +46,7 @@ def test_register(airtable_client):
     assert airtable_client.delete_asset("title", registerable_asset.title)
 
 
-def test_register_non_existent_key(airtable_client):
+def test_register_asset_with_non_existent_key_failure(airtable_client):
     """Testing an instance of the Airtable data class is an argument."""
 
     with pytest.raises(TypeError):
