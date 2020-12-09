@@ -37,18 +37,18 @@ class AirtableClient:
             app.logger.error(te)
             raise te
 
-    def delete_asset(self, airtable_id: str):
+    def delete_asset(self, field_name: str, field_value: str):
         """Delete Airtable asset.
 
-        Remove the specified item with the ID of the item registered in Airtable as an argument.
+        Remove the specified field name and the value registered in Airtable as arguments.
 
         Args:
-            airtable_id (str): ID registered with Airtable.
-
+            field_name (str): Airtable field names.
+            field_value (str): The values corresponding to the field names in Airtable.
         """
 
         try:
-            return self.airtable_client.delete(airtable_id)
+            return self.airtable_client.delete_by_field(field_name, field_value)
         except requests.exceptions.HTTPError as he:
             app.logger.error(he)
             raise he

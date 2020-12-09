@@ -1,6 +1,7 @@
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
 
+from airtable_client import AirtableClient
 from main import app
 
 
@@ -87,6 +88,7 @@ def test_POST_register_airtable_success(test_client):
     test_client.post("/registration", data={"asin": "B07XB5WX89"})
     response = test_client.post("/register_airtable", data=imd, follow_redirects=True)
     assert b"Registration completed!" in response.data
+    AirtableClient().delete_asset("title", "テンマクデザイン サーカス TC DX")
 
 
 def test_POST_register_airtable_failure(test_client):
