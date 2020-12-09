@@ -61,8 +61,12 @@ def registration():
     for product in session["product_list"]:
         if product.asin == asin:
             if product.info.contributors:
+                print(f"{product.info.contributors=}")
+                for contributor in product.info.contributors:
+                    print(f"{contributor.name=}")
                 product.info.contributors = ", ".join(
-                    [contributor.name for contributor in product.info.contributors])
+                    [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name else contributor.name
+                     for contributor in product.info.contributors])
             if product.product.features:
                 product.product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"
