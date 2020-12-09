@@ -36,3 +36,22 @@ class AirtableClient:
         except TypeError as te:
             app.logger.error(te)
             raise te
+
+    def delete_asset(self, airtable_id: str):
+        """Delete Airtable asset.
+
+        Remove the specified item with the ID of the item registered in Airtable as an argument.
+
+        Args:
+            airtable_id (str): ID registered with Airtable.
+
+        """
+
+        try:
+            return self.airtable_client.delete(airtable_id)
+        except requests.exceptions.HTTPError as he:
+            app.logger.error(he)
+            raise he
+        except TypeError as te:
+            app.logger.error(te)
+            raise te
