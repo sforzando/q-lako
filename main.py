@@ -75,7 +75,7 @@ def registration():
         for item in fetch_airtable:
             if find_near_matches(session["product"].title, item["fields"]["title"], max_l_dist=1) or \
                     find_near_matches(item["fields"]["title"], session["product"].title, max_l_dist=1):
-                similar_items.append(item)
+                similar_items.append(item["fields"])
         app.logger.info(f"{similar_items=}")
         return render_template("registration.html", **context_dict, similar_items=similar_items)
     else:
