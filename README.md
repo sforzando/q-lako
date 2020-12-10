@@ -112,9 +112,10 @@ python main.py
 If you start it locally, it will start in **Debug** mode.
 
 1. Access to `http://0.0.0.0:8888/`
+1. Log in with `User id` and `Password`
 1. Enter keywords or ISBN/ASIN code in the search window and press the search button
 1. Displays a list of items related to the keywords you have entered
-1. Select any item from the list of items and press the Select button
+1. Select any item from the list of items
 1. The item's details are displayed
 1. Edit the contents of the item's details form
 1. Press the Register button and you will be registered with Airtable
