@@ -10,6 +10,9 @@ from asset import Asset
 from flash_message import FlashMessage, FlashCategories
 
 
+airtable_client = AirtableClient()
+
+
 @app.route("/", methods=["GET"])
 def index():
     app.logger.info("index(): GET /")
@@ -67,7 +70,7 @@ def registration():
                 product.product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"
             session["product"] = product
-            context_dict["similar_items"] = AirtableClient().get_similar_items_by_keyword(session.get("keyword", None))
+            context_dict["similar_items"] = airtable_client.get_similar_items_by_keyword(session.get("keyword", None))
             app.logger.debug(f"{context_dict['similar_items']=}")
             if context_dict["similar_items"]:
                 return FlashMessage.show_with_render_template(
@@ -108,7 +111,7 @@ def register_airtable():
             registrant_name=posted_asset.get("registrants_name", None))
 
     try:
-        AirtableClient().register_asset(registrable_asset)
+        airtable_client.register_asset(registrable_asset)
         app.logger.info(f"Registration completed! {registrable_asset=}")
         return FlashMessage.show_with_redirect("Registration completed!", FlashCategories.INFO, url_for("index"))
     except requests.exceptions.HTTPError as he:
