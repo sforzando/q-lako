@@ -30,7 +30,7 @@ def search():
     }
     try:
         product_list = amazon_api_client.search_products(keywords=session["keyword"], item_count=30)
-        session["product_list"] = product_list if product_list else []
+        session["product_list"] = product_list
         return render_template("search.html", **context_dict)
     except AmazonException as ae:
         app.logger.error(ae)
@@ -54,7 +54,7 @@ def registration():
 
     if not asin or not session.get("product_list", None):
         return FlashMessage.show_with_redirect(
-            "Please try the procedure again from the beginning, sorry for the inconvenience.",
+            "Either the ASIN code was not posted correctly or the session could not be held. Please try again.",
             FlashCategories.WARNING,
             url_for("index"))
 
@@ -75,7 +75,7 @@ def registration():
             return render_template("registration.html", **context_dict)
     else:
         return FlashMessage.show_with_redirect(
-            "Please try the procedure again from the beginning, sorry for the inconvenience.",
+            "An unexpected error has been detected. Please try again.",
             FlashCategories.WARNING,
             url_for("index"))
 
