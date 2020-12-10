@@ -37,21 +37,20 @@ class AirtableClient:
             app.logger.error(te)
             raise te
 
-    def delete_asset(self, field_name: str, field_value: str):
+    def delete_asset_by_title(self, value: str):
         """Delete Airtable asset.
 
-        Remove the specified field name and the value registered in Airtable as arguments.
+        Deletes the equipment registered in the Airtable with the value of the title field as an argument.
 
         Args:
-            field_name (str): Airtable field names.
-            field_value (str): The values corresponding to the field names in Airtable.
+            value (str): The values corresponding to the title-field in Airtable.
 
         Returns:
             Airtable API response (dict): Dictionary of successful or unsuccessful deletions and IDs of items.
         """
 
         try:
-            return self.airtable_client.delete_by_field(field_name, field_value)
+            return self.airtable_client.delete_by_field("title", value)
         except KeyError as ke:
             app.logger.error(ke)
             raise ke

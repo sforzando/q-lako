@@ -42,8 +42,9 @@ def test_check_asset_instance(airtable_client):
 def test_register_asset_and_delete_asset_success(airtable_client):
     """Testing whether a dictionary with the proper field names can be registered correctly."""
 
-    assert airtable_client.register_asset(registerable_asset)
-    assert airtable_client.delete_asset("title", registerable_asset.title)
+    register_asset = airtable_client.register_asset(registerable_asset)
+    assert register_asset
+    assert airtable_client.airtable_client.delete(register_asset["id"])
 
 
 def test_register_asset_with_non_existent_key_failure(airtable_client):
@@ -57,4 +58,4 @@ def test_delete_asset_failure(airtable_client):
     """Testing when removing non-existent items."""
 
     with pytest.raises(KeyError):
-        airtable_client.delete_asset("title", "test")
+        airtable_client.delete_asset_by_title("test")
