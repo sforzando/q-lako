@@ -39,7 +39,7 @@ class AirtableClient:
             app.logger.error(te)
             raise te
 
-    def get_similar_items(self, keyword: str):
+    def get_similar_items(self, keywords: str):
         """Fetch Airtable item list.
 
         Fetch the items stored in Airtable.
@@ -50,9 +50,9 @@ class AirtableClient:
 
         similar_items = []
         try:
-            for item in self.airtable_client.get_all(view=app.config["AIRTABLE_VIEW_NAME"],
-                                                     fields=app.config["FIELD_NAME_FOR_FETCHING"]):
-                if find_near_matches(keyword, item["fields"]["title"], max_l_dist=1):
+            search_formula = f"Find('{keywords}',{app.config['FIELD_NAME_FOR_FETCHING'][0]})=1"
+            for item in self.airtable_client.get_all(formula=search_formula):
+                if find_near_matches(keywords, item["fields"]["title"], max_l_dist=1):
                     similar_items.append(item["fields"])
             return similar_items
         except requests.exceptions.HTTPError as he:
