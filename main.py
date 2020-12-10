@@ -1,7 +1,6 @@
 # !/usr/bin/env python3
 
 import re
-from datetime import datetime as dt
 
 import requests
 from amazon.exception import AmazonException
@@ -22,7 +21,7 @@ def index():
 @app.route("/search", methods=["GET"])
 def search():
     app.logger.info(f"search(): GET {request.full_path}")
-    keyword = request.args.get('query', None)
+    keyword = request.args.get("query", None)
 
     if not keyword:
         return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
@@ -104,8 +103,7 @@ def register_airtable():
             manufacture=posted_asset.get("manufacturer", None),
             contributor=posted_asset.get("contributors", None),
             product_group=posted_asset.get("product_group", None),
-            publication_date=dt.strptime(posted_asset.get("publication_date"), "%B %d, %Y").strftime(
-                "%Y-%m-%d") if posted_asset.get("publication_date", None) else None,
+            publication_date=posted_asset.get("publication_date", None),
             features=posted_asset.get("features", None),
             default_position=posted_asset.get("default_positions", None),
             current_position=posted_asset.get("current_positions", None),

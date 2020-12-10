@@ -68,19 +68,19 @@ def test_POST_registration_contributors(test_client):
 def test_POST_register_airtable_success(test_client):
     imd = ImmutableMultiDict(
         [
-            ('image_url', 'https://m.media-amazon.com/images/I/210tcugW9ML.jpg'),
-            ('title', 'テンマクデザイン サーカス TC DX'),
-            ('url', 'https://www.amazon.co.jp/dp/B07XB5WX89?tag=bellonieslog-22&linkCode=osi&th=1&psc=1'),
-            ('asin', 'B07XB5WX89'),
-            ('manufacturer', 'テンマクデザイン'),
-            ('contributors', None),
-            ('publication_date', None),
-            ('product_group', 'Sports'),
-            ('registrants_name', 'yusuke-sforzando'),
-            ('default_positions', 'sforzando-kawasaki'),
-            ('current_positions', 'sforzando-kawasaki'),
-            ('note', ''),
-            ('features', "['サーカスTC DX\\u3000サンドカラー', '【サーカスTCと共通 ●設営が簡単に出来るセットアップガイド付。']")
+            ("image_url", "https://m.media-amazon.com/images/I/210tcugW9ML.jpg"),
+            ("title", "テンマクデザイン サーカス TC DX"),
+            ("url", "https://www.amazon.co.jp/dp/B07XB5WX89?tag=bellonieslog-22&linkCode=osi&th=1&psc=1"),
+            ("asin", "B07XB5WX89"),
+            ("manufacturer", "テンマクデザイン"),
+            ("contributors", None),
+            ("publication_date", None),
+            ("product_group", "Sports"),
+            ("registrants_name", "yusuke-sforzando"),
+            ("default_positions", "sforzando-kawasaki"),
+            ("current_positions", "sforzando-kawasaki"),
+            ("note", ""),
+            ("features", "['サーカスTC DX\\u3000サンドカラー', '【サーカスTCと共通 ●設営が簡単に出来るセットアップガイド付。']")
         ]
     )
     test_client.get("/search?query=サーカスTC")
