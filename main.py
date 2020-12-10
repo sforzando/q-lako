@@ -67,14 +67,12 @@ def registration():
                 product.product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"
             session["product"] = product
-
-    if session.get("product", None):
-        context_dict["similar_items"] = AirtableClient().get_similar_items(session.get("keyword", None))
-        app.logger.debug(f"{context_dict['similar_items']=}")
-        if context_dict["similar_items"]:
-            return FlashMessage.show_with_render_template(
-                "Similar items are registered.", FlashCategories.INFO, "registration.html", **context_dict)
-        return render_template("registration.html", **context_dict)
+            context_dict["similar_items"] = AirtableClient().get_similar_items(session.get("keyword", None))
+            app.logger.debug(f"{context_dict['similar_items']=}")
+            if context_dict["similar_items"]:
+                return FlashMessage.show_with_render_template(
+                    "Similar items are registered.", FlashCategories.INFO, "registration.html", **context_dict)
+            return render_template("registration.html", **context_dict)
     else:
         return FlashMessage.show_with_redirect(
             "Please try the procedure again from the beginning, sorry for the inconvenience.",
