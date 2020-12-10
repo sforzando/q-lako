@@ -38,7 +38,7 @@ amazon_api_client = AmazonAPI(os.getenv("amazon_access_key"),
                               os.getenv("amazon_partner_tag"),
                               "JP")
 
-app.config["ACCOUNTS"] = [ID_PASS.split(":") for ID_PASS in os.getenv("accounts", None).split(",")]
+app.config["ACCOUNTS"] = tuple(tuple(ID_PASS.split(":")) for ID_PASS in os.getenv("accounts", None).split(","))
 
 if os.getenv("GAE_ENV", "").startswith("standard"):
     """ Production in GAE """

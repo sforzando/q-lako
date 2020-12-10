@@ -4,6 +4,7 @@ flake8
 Flask
 Flask-Login
 Flask-Session
+Flask-WTF
 #Flask-MonitoringDashboard
 google-cloud-logging
 pytest

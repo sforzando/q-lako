@@ -6,6 +6,9 @@ import requests
 from amazon.exception import AmazonException
 from flask import redirect, request, render_template, url_for, session
 from flask_login import login_required, login_user, logout_user, current_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField
+from wtforms.validators import DataRequired
 
 from __init__ import app, amazon_api_client
 from airtable_client import AirtableClient
@@ -14,24 +17,34 @@ from flash_message import FlashMessage, FlashCategories
 from user import User
 
 
+class LoginForm(FlaskForm):
+    user_id = StringField('user_id', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("index"))
 
+    login_form = LoginForm()
     if request.method == "GET":
         app.logger.info("login(): GET /login")
-        return render_template("login.html")
+        return render_template("login.html", login_form=login_form)
     else:
         app.logger.info("login(): POST /login")
-        user_id = request.form.get("user_id", "dummy")
-        password = sha256(request.form.get("password", "dummy").encode("UTF-8")).hexdigest()
-        if [ID for ID, PASS in app.config["ACCOUNTS"] if ID == user_id and PASS == password]:
-            login_user(User(user_id))
-            app.logger.info(f"{user_id} is logged in.")
-            return redirect(url_for("index"))
+        if login_form.validate_on_submit():
+            user_id = login_form.user_id.data
+            password = sha256(login_form.password.data.encode("UTF-8")).hexdigest()
+            if (user_id, password) in app.config["ACCOUNTS"]:
+                app.logger.info(f"{user_id} is logged in.")
+                login_user(User(user_id))
+                return redirect(url_for("index"))
+            else:
+                return FlashMessage.show_with_redirect(
+                    "The user_id or password is incorrect.", FlashCategories.ERROR, url_for("login"))
         else:
-            return FlashMessage.show_with_redirect("Log in failed.", FlashCategories.WARNING, url_for("login"))
+            return FlashMessage.show_with_redirect("Log in failed.", FlashCategories.ERROR, url_for("login"))
 
 
 @app.route("/logout", methods=["GET"])

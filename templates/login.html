@@ -5,6 +5,7 @@
     Log in to q-lako
   </h1>
   <form action="/login" method="post">
+    {{ login_form.csrf_token }}
     <div class="w-11/12 lg:w-2/5 text-left mx-auto">
       <label for="user_id">user id</label>
       <input type="text" name="user_id" id="user_id"

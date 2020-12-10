@@ -28,8 +28,9 @@ class AuthActions(object):
 @pytest.fixture
 def test_client():
     app.config["TESTING"] = True
-    app.config["ACCOUNTS"] = [
-        (config_parser.get("ACCOUNT", "user_id"), config_parser.get("ACCOUNT", "hashed_password"))]
+    app.config['WTF_CSRF_ENABLED'] = False
+    app.config["ACCOUNTS"] = (
+        (config_parser.get("ACCOUNT", "user_id"), config_parser.get("ACCOUNT", "hashed_password")),)
     return app.test_client()
 
 
@@ -52,12 +53,12 @@ def test_login_success(test_client, auth):
 
 def test_login_failure_user_id_not_correct(test_client, auth):
     response = auth.login(user_id="dummy")
-    assert b"Log in failed." in response.data
+    assert b"The user_id or password is incorrect." in response.data
 
 
 def test_login_failure_password_not_correct(test_client, auth):
     response = auth.login(password="dummy")
-    assert b"Log in failed." in response.data
+    assert b"The user_id or password is incorrect." in response.data
 
 
 def test_logout(test_client, auth):
