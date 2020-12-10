@@ -1,6 +1,5 @@
 import os
 from dataclasses import asdict
-from fuzzysearch import find_near_matches
 
 import requests
 
@@ -39,7 +38,7 @@ class AirtableClient:
             app.logger.error(te)
             raise te
 
-    def get_similar_items(self, keywords: str):
+    def get_similar_items_by_titles(self, keywords: str):
         """Fetch Airtable item list.
 
         Fetch the items stored in Airtable.
@@ -48,13 +47,30 @@ class AirtableClient:
             similar_items (list): A list containing a dictionary of similar items.
         """
 
-        similar_items = []
         try:
-            search_formula = f"Find('{keywords}',{app.config['FIELD_NAME_FOR_FETCHING'][0]})=1"
-            for item in self.airtable_client.get_all(formula=search_formula):
-                if find_near_matches(keywords, item["fields"]["title"], max_l_dist=1):
-                    similar_items.append(item["fields"])
-            return similar_items
+            search_formula = f"Find('{keywords}',title)=1"
+            return [Asset(
+                title=similar_item["fields"]["title"],
+                asin=similar_item["fields"]["asin"],
+                url=similar_item["fields"].get("url", ""),
+                images=similar_item["fields"].get("images", ""),
+                manufacture=similar_item["fields"].get("manufacture", ""),
+                contributor=similar_item["fields"].get("contributor", ""),
+                product_group=similar_item["fields"].get("product_group", ""),
+                publication_date=similar_item["fields"].get("publication_date", ""),
+                features=similar_item["fields"].get("features", ""),
+                default_position=similar_item["fields"].get("default_positions", ""),
+                current_position=similar_item["fields"].get("current_positions", ""),
+                note=similar_item["fields"].get("note", ""),
+                registrant_name=similar_item["fields"].get("registrant_name", ""),
+                registered_at=similar_item["fields"].get("registered_at", "")
+            ) for similar_item in self.airtable_client.get_all(formula=search_formula)]
+
         except requests.exceptions.HTTPError as he:
             app.logger.error(he)
             raise he
+
+
+if __name__ == "__main__":
+    air = AirtableClient().get_similar_items_by_titles("Python")
+    print(air)

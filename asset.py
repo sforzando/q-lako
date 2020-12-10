@@ -20,7 +20,7 @@ class Asset:
     current_position: str
     note: str
     registrant_name: str
-    registered_at: str = field(init=False, default="")
+    registered_at: str = field(init=True, default="")
 
     def __post_init__(self):
         now = datetime.now(tz_jst)

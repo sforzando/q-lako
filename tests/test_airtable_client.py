@@ -55,10 +55,10 @@ def test_register_non_existent_key(airtable_client):
 def test_get_similar_items_success(airtable_client):
     """Testing fetch list of currently registered items from Airtable."""
 
-    assert airtable_client.get_similar_items("Python")
+    assert airtable_client.get_similar_items_by_titles("Python")
 
 
 def test_get_similar_items_failure(airtable_client):
     """Testing what does not get registered."""
 
-    assert not airtable_client.get_similar_items("ファックス")
+    assert not airtable_client.get_similar_items_by_titles("ファックス")
