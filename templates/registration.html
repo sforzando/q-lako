@@ -44,11 +44,11 @@
         </div>
         <div class="mt-2">
           <label class="mt-2 mx-4" for="publication_date">Publication date:
-            <span class="text-yellow-500 text-xs font-extralight"> e.g. "December 05, 2020"</span>
+            <span class="text-yellow-500 text-xs font-extralight"> e.g. "2020/12/31"</span>
           </label>
-          <input class="ml-4 px-2 py-2 w-11/12 border-solid border-2 border-gray-500 rounded-md" type="text"
+          <input class="ml-4 px-2 py-2 w-11/12 border-solid border-2 border-gray-500 rounded-md" type="date"
             name="publication_date" id="publication_date" value="{{ session.product.info.publication_date or '' }}"
-            pattern="^(January|February|March|April|May|June|July|August|September|September|November|December) [0-9]{2}, [0-9]{4}$" />
+            pattern="^[0-9]{4}/[0-9]{2}/[0-9]{2}$" />
         </div>
         <div class="mt-2">
           <label class="mt-2 mx-4" for="product_group">Product group:</label>
@@ -59,13 +59,12 @@
           <label class="mt-2 mx-4" for="registrant">Registrant:
             <span class="text-red-500 text-xs font-extralight"> *required</span>
           </label>
-          <input class="ml-4 px-2 py-2 w-11/12 border-solid border-2 border-gray-500 rounded-md" list="registrants"
+          <select class="ml-4 px-2 py-2 w-11/12 border-solid border-2 border-gray-500 rounded-md"
             name="registrants_name" id="registrant" required />
-          <datalist id="registrants">
             {% for registrant in config.ASSET_REGISTRANTS %}
-            <option value="{{ registrant }}"></option>
+            <option value="{{ registrant }}">{{ registrant }}</option>
             {% endfor %}
-          </datalist>
+          </select>
         </div>
         <div class="mt-2">
           <label class="mt-2 mx-4" for="default_position">Default position:

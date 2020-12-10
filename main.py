@@ -1,5 +1,6 @@
 # !/usr/bin/env python3
 
+import re
 from datetime import datetime as dt
 
 import requests
@@ -63,12 +64,9 @@ def registration():
     for product in session["product_list"]:
         if product.asin == asin:
             if product.info.publication_date:
-                product.info.publication_date = dt.fromisoformat(
-                    product.info.publication_date[:10]).strftime("%B %d, %Y")
+                matched_str_date = re.search(r"19|20[0-9]{2}-[0-9]{2}-[0-9]{2}", product.info.publication_date)
+                product.info.publication_date = matched_str_date.group() if matched_str_date else None
             if product.info.contributors:
-                print(f"{product.info.contributors=}")
-                for contributor in product.info.contributors:
-                    print(f"{contributor.name=}")
                 product.info.contributors = ", ".join(
                     [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name else contributor.name
                      for contributor in product.info.contributors])
