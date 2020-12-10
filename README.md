@@ -131,9 +131,9 @@ flake8 *.py
 1. Prepare `settings_for_test.ini`
 
    ```settings_for_test.ini
+   [ACCOUNT]
    user_id=account_for_test
    password=password_for_test
-   hashed_password=c169a3744d7fb5cc92f2a00be84fbb937a355eab24238c6689dfdae03f4aa5ec
    ```
 
 1. `pytest . -vv --ignore-glob="venv/**/*" --durations=0`

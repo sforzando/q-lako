@@ -20,7 +20,7 @@ app.secret_key = secrets.token_bytes(32)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
-login_manager.login_message = u"Please Log in."
+login_manager.login_message = "Please Log in."
 login_manager.login_message_category = "info"
 
 SESSION_TYPE = "filesystem"
@@ -30,8 +30,8 @@ Session(app)
 
 app.config["THEME_COLOR_GRAY"] = config_parser.get("THEME-COLOR", "theme_color_gray")
 app.config["AIRTABLE_TABLE_NAME"] = config_parser.get("AIRTABLE", "airtable_table_name")
-app.config["ASSET_POSITIONS"] = config_parser.get("ASSET-PROPERTY", "positions").split(',')
-app.config["ASSET_REGISTRANTS"] = config_parser.get("ASSET-PROPERTY", "registrants").split(',')
+app.config["ASSET_POSITIONS"] = config_parser.get("ASSET-PROPERTY", "positions").split(",")
+app.config["ASSET_REGISTRANTS"] = config_parser.get("ASSET-PROPERTY", "registrants").split(",")
 
 amazon_api_client = AmazonAPI(os.getenv("amazon_access_key"),
                               os.getenv("amazon_secret_key"),

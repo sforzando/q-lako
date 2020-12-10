@@ -18,8 +18,8 @@ from user import User
 
 
 class LoginForm(FlaskForm):
-    user_id = StringField('user_id', validators=[DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
+    user_id = StringField("user_id", validators=[DataRequired()])
+    password = PasswordField("password", validators=[DataRequired()])
 
 
 @app.route("/login", methods=["GET", "POST"])
