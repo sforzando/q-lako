@@ -1,6 +1,6 @@
 # !/usr/bin/env python3
 
-import hashlib
+from hashlib import sha256
 
 import requests
 from amazon.exception import AmazonException
@@ -14,7 +14,7 @@ from flash_message import FlashMessage, FlashCategories
 from user import User
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("index"))
@@ -25,7 +25,7 @@ def login():
     else:
         app.logger.info("login(): POST /login")
         user_id = request.form.get("user_id", "dummy")
-        password = hashlib.sha256(request.form.get("password", "dummy").encode("UTF-8")).hexdigest()
+        password = sha256(request.form.get("password", "dummy").encode("UTF-8")).hexdigest()
         if [ID for ID, PASS in app.config["ACCOUNTS"] if ID == user_id and PASS == password]:
             login_user(User(user_id))
             app.logger.info(f"{user_id} is logged in.")
@@ -34,7 +34,7 @@ def login():
             return FlashMessage.show_with_redirect("Log in failed.", FlashCategories.WARNING, url_for("login"))
 
 
-@app.route('/logout', methods=['GET'])
+@app.route("/logout", methods=["GET"])
 def logout():
     app.logger.info("logout(): GET /logout")
     logout_user()
@@ -52,8 +52,8 @@ def index():
 @login_required
 def search():
     app.logger.info(f"search(): GET {request.full_path}")
-    keyword = request.args.get('query', None)
-    session.pop('_flashes', None)
+    keyword = request.args.get("query", None)
+    session.pop("_flashes", None)
 
     if not keyword:
         return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
