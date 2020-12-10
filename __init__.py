@@ -53,9 +53,6 @@ if os.getenv("GAE_ENV", "").startswith("standard"):
     cloud_logger.setLevel(logging.DEBUG)
     cloud_logger.addHandler(handler)
 
-    # Delete ID_PASS for test
-    del app.config["ACCOUNTS"][0]
-
 else:
     """ Local execution """
 

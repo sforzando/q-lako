@@ -26,7 +26,7 @@ def login():
         app.logger.info("login(): POST /login")
         user_id = request.form.get("user_id", "dummy")
         password = hashlib.sha256(request.form.get("password", "dummy").encode("UTF-8")).hexdigest()
-        if [ID for ID, PASS in app.config["ACCOUNTS"] if ID == user_id and password == password]:
+        if [ID for ID, PASS in app.config["ACCOUNTS"] if ID == user_id and PASS == password]:
             login_user(User(user_id))
             app.logger.info(f"{user_id} is logged in.")
             return redirect(url_for("index"))

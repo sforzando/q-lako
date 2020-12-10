@@ -4,9 +4,9 @@
 [![CodeQL](https://github.com/sforzando/q-lako/workflows/CodeQL/badge.svg)](https://github.com/sforzando/q-lako/actions?query=workflow%3ACodeQL)
 [![codecov](https://codecov.io/gh/sforzando/q-lako/branch/main/graph/badge.svg?token=NSRZFH0DW1)](https://codecov.io/gh/sforzando/q-lako)
 
-|1. login|2. index|3. search|4. registration|
-|---|---|---|---|
-|![login](https://user-images.githubusercontent.com/40506652/101451732-fb960c80-396f-11eb-8552-c57c695ad741.png)|![index](https://user-images.githubusercontent.com/40506652/101454967-26369400-3975-11eb-938e-e189e31c9fe3.png)|![search](https://user-images.githubusercontent.com/40506652/101453954-8593a480-3973-11eb-9364-6654740cc502.png)|![registration](https://user-images.githubusercontent.com/40506652/101451507-96dab200-396f-11eb-9834-b4cfa5e208c9.png)|
+| 1. login                                                                                                        | 2. index                                                                                                        | 3. search                                                                                                        | 4. registration                                                                                                        |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| ![login](https://user-images.githubusercontent.com/40506652/101451732-fb960c80-396f-11eb-8552-c57c695ad741.png) | ![index](https://user-images.githubusercontent.com/40506652/101454967-26369400-3975-11eb-938e-e189e31c9fe3.png) | ![search](https://user-images.githubusercontent.com/40506652/101453954-8593a480-3973-11eb-9364-6654740cc502.png) | ![registration](https://user-images.githubusercontent.com/40506652/101451507-96dab200-396f-11eb-9834-b4cfa5e208c9.png) |
 
 q-lako is a service to quickly register equipments and books.
 q-lako is a web app that helps you to manage books and supplies purchased on Amazon.
@@ -77,12 +77,8 @@ Keep your passphrase in a secure location like [YubiKey](https://www.yubico.com)
    amazon_partner_tag="amazon_partner_tag"
    amazon_access_key="amazon_access_key"
    amazon_secret_key="amazon_secret_key"
-   accounts="account_for_test:c169a3744d7fb5cc92f2a00be84fbb937a355eab24238c6689dfdae03f4aa5ec,user_id:password"
+   accounts="user_id_0:password_0,…,user_id_N:password_N"
    ```
-
-   Note
-     - `accounts` is multiple ID:PASS connected by `,`.
-     - The first ID:PASS (`account_for_test:c169a374…`) will delete on Production environment.
 
 1. Encrypt `.env` to create `.env.gpg`
 
@@ -131,9 +127,15 @@ flake8 *.py
 
 ### Test
 
-```shell
-pytest . -vv --ignore-glob="venv/**/*" --durations=0
-```
+1. Prepare `settings_for_test.ini`
+
+   ```settings_for_test.ini
+   user_id=account_for_test
+   password=password_for_test
+   hashed_password=c169a3744d7fb5cc92f2a00be84fbb937a355eab24238c6689dfdae03f4aa5ec
+   ```
+
+1. `pytest . -vv --ignore-glob="venv/**/*" --durations=0`
 
 ## Misc
 

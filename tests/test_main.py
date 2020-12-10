@@ -1,4 +1,4 @@
-import os
+from configparser import ConfigParser
 
 import pytest
 from flask import session
@@ -7,13 +7,18 @@ from werkzeug.datastructures import ImmutableMultiDict
 from main import app
 
 
+config_parser = ConfigParser()
+config_parser.read("settings_for_test.ini", encoding="utf8")
+
+
 class AuthActions(object):
     def __init__(self, client):
         self._client = client
 
-    def login(self, username="account_for_test", password="password_for_test"):
+    def login(
+            self, user_id=config_parser.get("ACCOUNT", "user_id"), password=config_parser.get("ACCOUNT", "password")):
         return self._client.post(
-            "/login", data={"user_id": username, "password": password}, follow_redirects=True
+            "/login", data={"user_id": user_id, "password": password}, follow_redirects=True
         )
 
     def logout(self):
@@ -23,6 +28,8 @@ class AuthActions(object):
 @pytest.fixture
 def test_client():
     app.config["TESTING"] = True
+    app.config["ACCOUNTS"] = [
+        (config_parser.get("ACCOUNT", "user_id"), config_parser.get("ACCOUNT", "hashed_password"))]
     return app.test_client()
 
 
@@ -43,23 +50,13 @@ def test_login_success(test_client, auth):
     assert b"Registration of equipment and books." in response.data
 
 
-def test_login_failure_user_id_not_correct(test_client):
-    response = test_client.post(
-        "/login",
-        data={
-            "user_id": "dummy",
-            "password": os.getenv("password")},
-        follow_redirects=True)
+def test_login_failure_user_id_not_correct(test_client, auth):
+    response = auth.login(user_id="dummy")
     assert b"Log in failed." in response.data
 
 
-def test_login_failure_password_not_correct(test_client):
-    response = test_client.post(
-        "/login",
-        data={
-            "user_id": os.getenv("user_id"),
-            "password": "dummy"},
-        follow_redirects=True)
+def test_login_failure_password_not_correct(test_client, auth):
+    response = auth.login(password="dummy")
     assert b"Log in failed." in response.data
 
 
