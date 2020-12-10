@@ -38,7 +38,7 @@ class AirtableClient:
             app.logger.error(te)
             raise te
 
-    def get_similar_items_by_titles(self, keywords: str):
+    def get_similar_items_by_keyword(self, keywords: str):
         """Fetch Airtable item list.
 
         Fetch the items stored in Airtable.

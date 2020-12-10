@@ -27,6 +27,10 @@ def airtable_client():
     return airtable_client
 
 
+def setup_method(airtable_client):
+    airtable_client.register_asset(registerable_asset)["fields"]["id"]
+
+
 def test_api_key():
     assert os.getenv("airtable_base_id")
     assert os.getenv("airtable_api_key")
@@ -55,10 +59,10 @@ def test_register_non_existent_key(airtable_client):
 def test_get_similar_items_success(airtable_client):
     """Testing fetch list of currently registered items from Airtable."""
 
-    assert airtable_client.get_similar_items_by_titles("Python")
+    assert airtable_client.get_similar_items_by_keyword("PlayStation 5")
 
 
 def test_get_similar_items_failure(airtable_client):
     """Testing what does not get registered."""
 
-    assert not airtable_client.get_similar_items_by_titles("ファックス")
+    assert not airtable_client.get_similar_items_by_keyword("ファックス")
