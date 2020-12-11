@@ -70,8 +70,10 @@ def registration():
                 product.product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"
             session["product"] = product
-            context_dict["similar_items"] = airtable_client.get_similar_items_by_keyword(session.get("keyword", None))
-            app.logger.debug(f"{context_dict['similar_items']=}")
+            if product.info.product_group:
+                context_dict["similar_items"] = airtable_client.get_similar_items_by_keyword(
+                    session.get("keyword", None), product.info.product_group)
+                app.logger.debug(f"{context_dict['similar_items']=}")
             if context_dict["similar_items"]:
                 return FlashMessage.show_with_render_template(
                     "Similar items are registered.", FlashCategories.INFO, "registration.html", **context_dict)

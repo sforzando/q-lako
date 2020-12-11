@@ -3,8 +3,8 @@ from dataclasses import asdict
 from dateutil.parser import parse
 
 import requests
-
 from airtable import Airtable
+from fuzzysearch import find_near_matches
 
 from __init__ import app
 from asset import Asset
@@ -39,7 +39,7 @@ class AirtableClient:
             app.logger.error(te)
             raise te
 
-    def get_similar_items_by_keyword(self, keywords: str):
+    def get_similar_items_by_keyword(self, keyword: str, product_group: str):
         """Fetch Airtable item list.
 
         Fetch the items stored in Airtable.
@@ -47,25 +47,35 @@ class AirtableClient:
         Returns:
             similar_items (list): A list containing a dictionary of similar items.
         """
-
+        similar_items = []
         try:
-            formula = f"SEARCH('{keywords}',title)"
+            same_product_group_list = self.airtable_client.search(
+                field_name="product_group", field_value=product_group)
+            for item in same_product_group_list:
+                if find_near_matches(keyword, item["fields"]["title"], max_l_dist=1):
+                    similar_items.append(item)
             return [Asset(
-                    title=similar_item["fields"]["title"],
-                    asin=similar_item["fields"]["asin"],
-                    url=similar_item["fields"].get("url", None),
-                    images=similar_item["fields"].get("images", None),
-                    manufacture=similar_item["fields"].get("manufacture", None),
-                    contributor=similar_item["fields"].get("contributor", None),
-                    product_group=similar_item["fields"].get("product_group", None),
-                    publication_date=similar_item["fields"].get("publication_date", None),
-                    features=similar_item["fields"].get("features", None),
-                    default_position=similar_item["fields"].get("default_positions", None),
-                    current_position=similar_item["fields"].get("current_positions", None),
-                    note=similar_item["fields"].get("note", None),
-                    registrant_name=similar_item["fields"].get("registrant_name", None),
-                    registered_at=parse(similar_item["fields"].get("registered_at", None)).strftime("%Y/%d/%m %H:%M")
-                    ) for similar_item in self.airtable_client.get_all(formula=formula)]
+                title=similar_item["fields"]["title"],
+                asin=similar_item["fields"]["asin"],
+                url=similar_item["fields"].get("url", None),
+                images=similar_item["fields"].get("images", None),
+                manufacture=similar_item["fields"].get("manufacture", None),
+                contributor=similar_item["fields"].get("contributor", None),
+                product_group=similar_item["fields"].get("product_group", None),
+                publication_date=similar_item["fields"].get("publication_date", None),
+                features=similar_item["fields"].get("features", None),
+                default_position=similar_item["fields"].get("default_positions", None),
+                current_position=similar_item["fields"].get("current_positions", None),
+                note=similar_item["fields"].get("note", None),
+                registrant_name=similar_item["fields"].get("registrant_name", None),
+                registered_at=parse(similar_item["fields"].get("registered_at", None)).strftime("%Y/%d/%m %H:%M")
+            ) for similar_item in similar_items]
         except requests.exceptions.HTTPError as he:
             app.logger.error(he)
             raise he
+
+
+if __name__ == "__main__":
+    air = AirtableClient().get_similar_items_by_keyword("Python", "Book")
+    print(air)
+    print(len(air))
