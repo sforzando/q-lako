@@ -106,32 +106,33 @@ def registration():
         else:
             return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
 
-    app.logger.info("registration: POST /registration")
-    app.logger.debug(f"{request.form=}")
-    asin = request.form.get("asin", "")
+    if context_dict.form.validate_on_submit():
+        app.logger.info("registration: POST /registration")
+        app.logger.debug(f"{request.form=}")
+        asin = request.form.get("asin", "")
 
-    if not asin or not session.get("product_list", None):
-        return FlashMessage.show_with_redirect(
-            "Please try the procedure again from the beginning, sorry for the inconvenience.",
-            FlashCategories.WARNING,
-            url_for("index"))
+        if not asin or not session.get("product_list", None):
+            return FlashMessage.show_with_redirect(
+                "Please try the procedure again from the beginning, sorry for the inconvenience.",
+                FlashCategories.WARNING,
+                url_for("index"))
 
-    for product in session["product_list"]:
-        if product.asin == asin:
-            if product.info.publication_date:
-                try:
-                    product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%d-%mT%H:%M")
-                except ValueError as ve:
-                    app.logger.error(f"registration: Parse failed. {ve}")
-                    product.info.publication_date = None
-            if product.info.contributors:
-                product.info.contributors = ", ".join(
-                    [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name else contributor.name
-                     for contributor in product.info.contributors])
-            if product.product.features:
-                product.product.features = "\n".join(product.product.features)
-            context_dict["subtitle"] = f"Registration for details of {product.title}"
-            session["product"] = product
+        for product in session["product_list"]:
+            if product.asin == asin:
+                if product.info.publication_date:
+                    try:
+                        product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%d-%mT%H:%M")
+                    except ValueError as ve:
+                        app.logger.error(f"registration: Parse failed. {ve}")
+                        product.info.publication_date = None
+                if product.info.contributors:
+                    product.info.contributors = ", ".join(
+                        [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name
+                            else contributor.name for contributor in product.info.contributors])
+                if product.product.features:
+                    product.product.features = "\n".join(product.product.features)
+                context_dict["subtitle"] = f"Registration for details of {product.title}"
+                session["product"] = product
 
     if session.get("product", None):
         return render_template("registration.html", **context_dict)
@@ -147,7 +148,9 @@ def registration():
 def register_airtable():
     app.logger.info("register_airtable(): POST /register_airtable")
     app.logger.debug(f"{request.form=}")
-    posted_asset = request.form.to_dict() if request.form else {}
+    form = FlaskForm()
+    if form.validate_on_submit():
+        posted_asset = request.form.to_dict() if request.form else {}
 
     if not posted_asset:
         return FlashMessage.show_with_redirect(
