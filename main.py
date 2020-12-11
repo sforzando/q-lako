@@ -72,7 +72,7 @@ def registration():
             session["product"] = product
             if product.info.product_group:
                 context_dict["similar_items"] = airtable_client.get_similar_items_by_keyword(
-                    session.get("keyword", None), product.info.product_group)
+                    product.info.product_group, session.get("keyword", None))
                 app.logger.debug(f"{context_dict['similar_items']=}")
             if context_dict["similar_items"]:
                 return FlashMessage.show_with_render_template(

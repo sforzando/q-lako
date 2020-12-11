@@ -39,21 +39,28 @@ class AirtableClient:
             app.logger.error(te)
             raise te
 
-    def get_similar_items_by_keyword(self, keyword: str, product_group: str):
+    def get_similar_items_by_keyword(self, product_group: str, keyword: str):
         """Fetch Airtable item list.
 
-        Fetch the items stored in Airtable.
+        It retrieves items with a common product group stored in the Airtable and
+        outputs similar items related to the keyword.
+
+        Args:
+            keyword (str): Keywords used in the search.
+            product_group (str): Product group name for the specified item.
 
         Returns:
-            similar_items (list): A list containing a dictionary of similar items.
+            similar_items (list<Asset>): List of Asset classes for similar items.
         """
-        similar_items = []
+
         try:
-            same_product_group_list = self.airtable_client.search(
+            product_group_list = self.airtable_client.search(
                 field_name="product_group", field_value=product_group)
-            for item in same_product_group_list:
+            similar_items = []
+            for item in product_group_list:
                 if find_near_matches(keyword, item["fields"]["title"], max_l_dist=1):
                     similar_items.append(item)
+
             return [Asset(
                 title=similar_item["fields"]["title"],
                 asin=similar_item["fields"]["asin"],
@@ -73,9 +80,3 @@ class AirtableClient:
         except requests.exceptions.HTTPError as he:
             app.logger.error(he)
             raise he
-
-
-if __name__ == "__main__":
-    air = AirtableClient().get_similar_items_by_keyword("Python", "Book")
-    print(air)
-    print(len(air))
