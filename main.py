@@ -121,7 +121,7 @@ def registration():
             if product.asin == asin:
                 if product.info.publication_date:
                     try:
-                        product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%d-%mT%H:%M")
+                        product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%m-%dT%H:%M")
                     except ValueError as ve:
                         app.logger.error(f"registration: Parse failed. {ve}")
                         product.info.publication_date = None
@@ -166,7 +166,7 @@ def register_airtable():
             manufacture=posted_asset.get("manufacturer", None),
             contributor=posted_asset.get("contributors", None),
             product_group=posted_asset.get("product_group", None),
-            publication_date=posted_asset.get("publication_date", None),
+            publication_date=parse(posted_asset.get("publication_date", None)).strftime("%Y-%m-%d %H:%M"),
             features=posted_asset.get("features", None),
             default_position=posted_asset.get("default_positions", None),
             current_position=posted_asset.get("current_positions", None),
