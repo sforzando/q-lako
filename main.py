@@ -106,7 +106,7 @@ def registration():
         else:
             return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
 
-    if context_dict.form.validate_on_submit():
+    if context_dict["form"].validate_on_submit():
         app.logger.info("registration: POST /registration")
         app.logger.debug(f"{request.form=}")
         asin = request.form.get("asin", "")
