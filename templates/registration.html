@@ -55,15 +55,9 @@
             name="product_group" id="product_group" value="{{ session.product.info.product_group or '' }}" />
         </div>
         <div class="mt-2">
-          <label class="mt-2 mx-4" for="registrant">Registrant:
-            <span class="text-red-500 text-xs font-extralight"> *required</span>
-          </label>
-          <select class="ml-4 px-2 py-2 w-11/12 border-solid border-2 border-gray-500 rounded-md"
-            name="registrants_name" id="registrant" required />
-            {% for registrant in config.ASSET_REGISTRANTS %}
-            <option value="{{ registrant }}">{{ registrant }}</option>
-            {% endfor %}
-          </select>
+          <label class="mt-2 mx-4" for="registrant">Registrant:</label>
+          <input class="ml-4 px-2 py-2 w-11/12" type="text" name="registrant" id="registrant"
+            value="{{ current_user.get_id() }}" readonly />
         </div>
         <div class="mt-2">
           <label class="mt-2 mx-4" for="default_position">Default position:
