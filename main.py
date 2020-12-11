@@ -40,9 +40,11 @@ def login():
         return render_template("login.html", login_form=login_form)
     else:
         app.logger.info("login(): POST /login")
-        app.logger.info(f"{request.form.get('csrf_token')=}")
+        app.logger.info(f"{request.form.get('csrf_token')=}\n{request.form.get('user_id')=}")
         if login_form.validate_on_submit():
             user_id = login_form.user_id.data
+            app.logger.info(f"{login_form.user_id.data=}")
+            app.logget.info(f"{app.config['ACCOUNTS']=}")
             password = sha256(login_form.password.data.encode("UTF-8")).hexdigest()
             if (user_id, password) in app.config["ACCOUNTS"]:
                 app.logger.info(f"{user_id} is logged in.")
