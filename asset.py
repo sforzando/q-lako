@@ -32,5 +32,5 @@ class Asset:
         if type(self.publication_date) and not self.publication_date:
             print(f"{type(self.publication_date)=}\n{self.publication_date=}")
             self.publication_date = None
-        pattern = "【(.+?)】"
+        pattern = "【.+?】"
         self.title = re.sub(pattern, "", self.title)
