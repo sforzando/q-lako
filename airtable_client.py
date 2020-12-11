@@ -1,12 +1,12 @@
 import os
 from dataclasses import asdict
-from dateutil.parser import parse
 
 import requests
 from airtable import Airtable
+from dateutil.parser import parse
+from flask import current_app
 from fuzzysearch import find_near_matches
 
-from __init__ import app
 from asset import Asset
 
 
@@ -16,7 +16,7 @@ class AirtableClient:
         """Initialize AirtableClient."""
 
         self.airtable_client = Airtable(os.getenv("airtable_base_id"),
-                                        app.config["AIRTABLE_TABLE_NAME"], os.getenv("airtable_api_key"))
+                                        current_app.config["AIRTABLE_TABLE_NAME"], os.getenv("airtable_api_key"))
 
     def register_asset(self, asset: Asset):
         """Register to Airtable.
@@ -33,10 +33,10 @@ class AirtableClient:
         try:
             return self.airtable_client.insert(asdict(asset))
         except requests.exceptions.HTTPError as he:
-            app.logger.error(he)
+            current_app.logger.error(he)
             raise he
         except TypeError as te:
-            app.logger.error(te)
+            current_app.logger.error(te)
             raise te
 
     def get_similar_items_by_keyword(self, product_group: str, keyword: str):
@@ -78,5 +78,5 @@ class AirtableClient:
                 registered_at=parse(similar_item["fields"].get("registered_at", None)).strftime("%Y/%d/%m %H:%M")
             ) for similar_item in similar_items]
         except requests.exceptions.HTTPError as he:
-            app.logger.error(he)
+            current_app.logger.error(he)
             raise he

@@ -4,13 +4,9 @@ import requests
 from amazon.exception import AmazonException
 from flask import request, render_template, url_for, session
 
-from __init__ import app, amazon_api_client
-from airtable_client import AirtableClient
+from __init__ import app, amazon_api_client, airtable_client
 from asset import Asset
 from flash_message import FlashMessage, FlashCategories
-
-
-airtable_client = AirtableClient()
 
 
 @app.route("/", methods=["GET"])

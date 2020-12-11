@@ -1,13 +1,4 @@
-import pytest
 from werkzeug.datastructures import ImmutableMultiDict
-
-from main import app
-
-
-@pytest.fixture
-def test_client():
-    app.config["TESTING"] = True
-    return app.test_client()
 
 
 def test_GET_index(test_client):
@@ -55,7 +46,8 @@ def test_POST_registration_success(test_client):
 def test_POST_registration_failure(test_client):
     response = test_client.post("/registration", follow_redirects=True)
     assert b"Registration of equipment and books." in response.data
-    assert b"Either the ASIN code was not posted correctly or the session could not be held. Please try again." in response.data
+    assert b"Either the ASIN code was not posted correctly or the session could not be held. Please try again." in \
+        response.data
 
 
 def test_POST_registration_contributors(test_client):
