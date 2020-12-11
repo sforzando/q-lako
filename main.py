@@ -40,6 +40,7 @@ def login():
         return render_template("login.html", login_form=login_form)
     else:
         app.logger.info("login(): POST /login")
+        app.logger.info(f"{request.form.get('csrf_token')=}")
         if login_form.validate_on_submit():
             user_id = login_form.user_id.data
             password = sha256(login_form.password.data.encode("UTF-8")).hexdigest()
