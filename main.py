@@ -34,7 +34,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for("index"))
 
-    login_form = LoginForm(request.form)
+    login_form = LoginForm()
     if request.method == "GET":
         app.logger.info("login(): GET /login")
         return render_template("login.html", login_form=login_form)
@@ -80,7 +80,8 @@ def search():
 
     context_dict = {
         "subtitle": f"Search results for {keyword}",
-        "keyword": keyword
+        "keyword": keyword,
+        "form": FlaskForm()
     }
     try:
         product_list = amazon_api_client.search_products(keywords=keyword, item_count=30)
@@ -94,7 +95,9 @@ def search():
 @app.route("/registration", methods=["GET", "POST"])
 @login_required
 def registration():
-    context_dict = {}
+    context_dict = {
+        "form": FlaskForm()
+    }
     if request.method == "GET":
         app.logger.info(f"registration: GET {request.full_path}")
         if session.get("product", None):
