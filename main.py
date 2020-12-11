@@ -158,6 +158,7 @@ def register_airtable():
             FlashCategories.WARNING,
             url_for("index"))
     else:
+        publication_date = posted_asset.get("publication_date", None)
         registrable_asset = Asset(
             title=posted_asset.get("title", None),
             asin=posted_asset.get("asin", None),
@@ -166,7 +167,7 @@ def register_airtable():
             manufacture=posted_asset.get("manufacturer", None),
             contributor=posted_asset.get("contributors", None),
             product_group=posted_asset.get("product_group", None),
-            publication_date=parse(posted_asset.get("publication_date", None)).strftime("%Y-%m-%d %H:%M"),
+            publication_date=parse(publication_date).strftime("%Y-%m-%d %H:%M") if publication_date else None,
             features=posted_asset.get("features", None),
             default_position=posted_asset.get("default_positions", None),
             current_position=posted_asset.get("current_positions", None),
