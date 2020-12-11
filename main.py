@@ -44,7 +44,7 @@ def login():
         if login_form.validate_on_submit():
             user_id = login_form.user_id.data
             app.logger.info(f"{login_form.user_id.data=}")
-            app.logget.info(f"{app.config['ACCOUNTS']=}")
+            app.logger.info(f"{app.config['ACCOUNTS']=}")
             password = sha256(login_form.password.data.encode("UTF-8")).hexdigest()
             if (user_id, password) in app.config["ACCOUNTS"]:
                 app.logger.info(f"{user_id} is logged in.")
