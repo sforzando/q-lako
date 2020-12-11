@@ -3,7 +3,7 @@
   Registration details
 </h1>
 <form action="/register_airtable" method="post">
-  {{ form.csrf_token }}
+  {{ form.hidden_tag() }}
   <div class="mt-2">
     <div class="flex flex-wrap flex-row-reverse text-center">
       <div class="flex-col justify-center items-center w-full xl:w-1/3 m-4">
