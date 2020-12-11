@@ -3,8 +3,8 @@ from dataclasses import asdict
 
 import requests
 from airtable import Airtable
+from flask import current_app
 
-from __init__ import app
 from asset import Asset
 
 
@@ -14,7 +14,7 @@ class AirtableClient:
         """Initialize AirtableClient."""
 
         self.airtable_client = Airtable(os.getenv("airtable_base_id"),
-                                        app.config["AIRTABLE_TABLE_NAME"], os.getenv("airtable_api_key"))
+                                        current_app.config["AIRTABLE_TABLE_NAME"], os.getenv("airtable_api_key"))
 
     def register_asset(self, asset: Asset):
         """Register to Airtable.
@@ -31,8 +31,8 @@ class AirtableClient:
         try:
             return self.airtable_client.insert(asdict(asset))
         except requests.exceptions.HTTPError as he:
-            app.logger.error(he)
+            current_app.logger.error(he)
             raise he
         except TypeError as te:
-            app.logger.error(te)
+            current_app.logger.error(te)
             raise te

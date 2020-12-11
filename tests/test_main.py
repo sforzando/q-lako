@@ -1,50 +1,7 @@
 import logging
-from configparser import ConfigParser
-from hashlib import sha256
 
-import pytest
 from flask import session
 from werkzeug.datastructures import ImmutableMultiDict
-
-from main import app
-
-config_parser = ConfigParser()
-config_parser.read("settings_for_test.ini", encoding="utf8")
-
-
-class AuthActions(object):
-    def __init__(self, client):
-        self._client = client
-
-    def login(
-            self, user_id=config_parser.get("ACCOUNT", "user_id"), password=config_parser.get("ACCOUNT", "password")):
-        return self._client.post(
-            "/login", data={"user_id": user_id, "password": password}, follow_redirects=True
-        )
-
-    def logout(self):
-        return self._client.get("/logout", follow_redirects=True)
-
-
-@pytest.fixture
-def test_client():
-    app.config["TESTING"] = True
-    app.config["WTF_CSRF_ENABLED"] = False
-    app.config["ACCOUNTS"] = ((config_parser.get("ACCOUNT", "user_id"),
-                               sha256(config_parser.get("ACCOUNT", "password").encode("UTF-8")).hexdigest()),)
-    app.config["AMAZON_ITEM_COUNT"] = int(config_parser.get("AMAZON_API", "item_count"))
-    return app.test_client()
-
-
-@pytest.fixture
-def auth(test_client):
-    return AuthActions(test_client)
-
-
-@pytest.fixture
-def authenticated_client(test_client, auth):
-    auth.login()
-    return test_client
 
 
 def test_login_success(test_client, auth):
@@ -54,11 +11,13 @@ def test_login_success(test_client, auth):
 
 
 def test_login_failure_user_id_not_correct(test_client, auth):
+    auth.logout()
     response = auth.login(user_id="dummy")
     assert b"The user_id or password is incorrect." in response.data
 
 
 def test_login_failure_password_not_correct(test_client, auth):
+    auth.logout()
     response = auth.login(password="dummy")
     assert b"The user_id or password is incorrect." in response.data
 

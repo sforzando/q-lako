@@ -13,8 +13,7 @@ from flask_wtf.csrf import CSRFError
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
 
-from __init__ import app, amazon_api_client
-from airtable_client import AirtableClient
+from __init__ import app, amazon_api_client, airtable_client
 from asset import Asset
 from flash_message import FlashMessage, FlashCategories
 from user import User
@@ -171,7 +170,7 @@ def register_airtable():
             registrant_name=posted_asset.get("registrants_name", None))
 
     try:
-        AirtableClient().register_asset(registrable_asset)
+        airtable_client.register_asset(registrable_asset)
         app.logger.info(f"Registration completed! {registrable_asset=}")
         return FlashMessage.show_with_redirect("Registration completed!", FlashCategories.INFO, url_for("index"))
     except requests.exceptions.HTTPError as he:

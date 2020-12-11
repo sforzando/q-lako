@@ -11,6 +11,8 @@ from flask_wtf.csrf import CSRFProtect
 
 from user import User
 
+from airtable_client import AirtableClient
+
 load_dotenv(verbose=True)
 config_parser = ConfigParser()
 config_parser.read("settings.ini", encoding="utf8")
@@ -40,6 +42,8 @@ amazon_api_client = AmazonAPI(os.getenv("amazon_access_key"),
                               os.getenv("amazon_secret_key"),
                               os.getenv("amazon_partner_tag"),
                               "JP")
+with app.app_context():
+    airtable_client = AirtableClient()
 
 app.config["ACCOUNTS"] = tuple(tuple(ID_PASS.split(":")) for ID_PASS in os.getenv("accounts", None).split(","))
 
