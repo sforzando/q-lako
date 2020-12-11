@@ -1,5 +1,6 @@
 import os
 from dataclasses import asdict
+from dateutil.parser import parse
 
 import requests
 
@@ -63,7 +64,7 @@ class AirtableClient:
                     current_position=similar_item["fields"].get("current_positions", None),
                     note=similar_item["fields"].get("note", None),
                     registrant_name=similar_item["fields"].get("registrant_name", None),
-                    registered_at=similar_item["fields"].get("registered_at", None)
+                    registered_at=parse(similar_item["fields"].get("registered_at", None)).strftime("%Y/%d/%m %H:%M")
                     ) for similar_item in self.airtable_client.get_all(formula=formula)]
         except requests.exceptions.HTTPError as he:
             app.logger.error(he)
