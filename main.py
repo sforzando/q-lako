@@ -26,7 +26,7 @@ class LoginForm(FlaskForm):
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e):
-    return FlashMessage.show_with_redirect(e.description, FlashCategories.ERROR, url_for("login")), 400
+    return FlashMessage.show_with_redirect(e.description, FlashCategories.ERROR, url_for("login"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -34,7 +34,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for("index"))
 
-    login_form = LoginForm()
+    login_form = LoginForm(request.form)
     if request.method == "GET":
         app.logger.info("login(): GET /login")
         return render_template("login.html", login_form=login_form)
