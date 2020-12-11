@@ -39,14 +39,27 @@ def test_check_asset_instance(airtable_client):
     assert registerable_asset.registered_at
 
 
-def test_register(airtable_client):
+def test_register_asset_success(airtable_client):
     """Testing whether a dictionary with the proper field names can be registered correctly."""
 
     assert airtable_client.register_asset(registerable_asset)
 
 
-def test_register_non_existent_key(airtable_client):
-    """Testing an instance of the Airtable data class is an argument."""
+def test_delete_asset_by_title_success(airtable_client):
+    """Testing delete an Asset with the proper field name"""
+
+    assert airtable_client.delete_asset_by_title(registerable_asset.title)
+
+
+def test_delete_asset_by_title_failure(airtable_client):
+    """Testing when removing non-existent items."""
+
+    with pytest.raises(KeyError):
+        airtable_client.delete_asset_by_title("test")
+
+
+def test_register_asset_with_non_existent_key_failure(airtable_client):
+    """Testing when a non-existent key is registered."""
 
     with pytest.raises(TypeError):
         airtable_client.register_asset({"test": "test"})
