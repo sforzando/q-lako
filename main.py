@@ -68,7 +68,7 @@ def registration():
                 if re.search(r"\d{4}-\d{2}-\d{2}(\s|T)\d{2}:\d{2}(:\d{2}(\.\d{3,6})?)?Z",
                              product.info.publication_date):
                     product.info.publication_date = product.info.publication_date.replace("Z", "+00:00")
-                # Convert string_datetime to datetime
+                # Check datetime format from Amazon PA-API and pick valid pattern only
                 matched_str_datetime = re.search(
                     r"\d{4}-\d{2}-\d{2}(\s|T)\d{2}:\d{2}(:\d{2}(\.\d{3,6})?)?((\+|-)\d{2}:\d{2})?",
                     product.info.publication_date)
