@@ -4,8 +4,7 @@ import requests
 from amazon.exception import AmazonException
 from flask import request, render_template, url_for, session
 
-from __init__ import app, amazon_api_client
-from airtable_client import AirtableClient
+from __init__ import app, amazon_api_client, airtable_client
 from asset import Asset
 from flash_message import FlashMessage, FlashCategories
 
@@ -19,18 +18,17 @@ def index():
 @app.route("/search", methods=["GET"])
 def search():
     app.logger.info(f"search(): GET {request.full_path}")
-    keyword = request.args.get('query', None)
+    session["keyword"] = request.args.get('query', None)
 
-    if not keyword:
+    if not session["keyword"]:
         return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
 
     context_dict = {
-        "subtitle": f"Search results for {keyword}",
-        "keyword": keyword
+        "subtitle": f"Search results for {session['keyword']}",
+        "keyword": session["keyword"]
     }
     try:
-        product_list = amazon_api_client.search_products(keywords=keyword, item_count=30)
-        session["product_list"] = product_list if product_list else []
+        session["product_list"] = amazon_api_client.search_products(keywords=session["keyword"], item_count=30)
         return render_template("search.html", **context_dict)
     except AmazonException as ae:
         app.logger.error(ae)
@@ -54,7 +52,7 @@ def registration():
 
     if not asin or not session.get("product_list", None):
         return FlashMessage.show_with_redirect(
-            "Please try the procedure again from the beginning, sorry for the inconvenience.",
+            "Either the ASIN code was not posted correctly or the session could not be held. Please try again.",
             FlashCategories.WARNING,
             url_for("index"))
 
@@ -67,12 +65,17 @@ def registration():
                 product.product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"
             session["product"] = product
-
-    if session.get("product", None):
-        return render_template("registration.html", **context_dict)
+            if product.info.product_group:
+                context_dict["similar_items"] = airtable_client.get_similar_items_by_keyword(
+                    product.info.product_group, session.get("keyword", None))
+                app.logger.debug(f"{context_dict['similar_items']=}")
+            if context_dict["similar_items"]:
+                return FlashMessage.show_with_render_template(
+                    "Similar items are registered.", FlashCategories.INFO, "registration.html", **context_dict)
+            return render_template("registration.html", **context_dict)
     else:
         return FlashMessage.show_with_redirect(
-            "Please try the procedure again from the beginning, sorry for the inconvenience.",
+            "An unexpected error has been detected. Please try again.",
             FlashCategories.WARNING,
             url_for("index"))
 
@@ -105,7 +108,7 @@ def register_airtable():
             registrant_name=posted_asset.get("registrants_name", None))
 
     try:
-        AirtableClient().register_asset(registrable_asset)
+        airtable_client.register_asset(registrable_asset)
         app.logger.info(f"Registration completed! {registrable_asset=}")
         return FlashMessage.show_with_redirect("Registration completed!", FlashCategories.INFO, url_for("index"))
     except requests.exceptions.HTTPError as he:

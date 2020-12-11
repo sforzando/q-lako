@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_session import Session
 
+from airtable_client import AirtableClient
+
 load_dotenv(verbose=True)
 config_parser = ConfigParser()
 config_parser.read("settings.ini", encoding="utf8")
@@ -21,6 +23,8 @@ Session(app)
 
 app.config["THEME_COLOR_GRAY"] = config_parser.get("THEME-COLOR", "theme_color_gray")
 app.config["AIRTABLE_TABLE_NAME"] = config_parser.get("AIRTABLE", "airtable_table_name")
+app.config["AIRTABLE_VIEW_NAME"] = config_parser.get("AIRTABLE", "airtable_view_name")
+app.config["FIELD_NAME_FOR_FETCHING"] = config_parser.get("AIRTABLE", "field_name_for_fetching").split(',')
 app.config["ASSET_POSITIONS"] = config_parser.get("ASSET-PROPERTY", "positions").split(',')
 app.config["ASSET_REGISTRANTS"] = config_parser.get("ASSET-PROPERTY", "registrants").split(',')
 
@@ -28,6 +32,8 @@ amazon_api_client = AmazonAPI(os.getenv("amazon_access_key"),
                               os.getenv("amazon_secret_key"),
                               os.getenv("amazon_partner_tag"),
                               "JP")
+with app.app_context():
+    airtable_client = AirtableClient()
 
 if os.getenv("GAE_ENV", "").startswith("standard"):
     """ Production in GAE """

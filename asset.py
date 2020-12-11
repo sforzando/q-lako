@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
+import re
 
 tz_jst = timezone(timedelta(hours=9), "JST")
 
@@ -20,7 +21,7 @@ class Asset:
     current_position: str
     note: str
     registrant_name: str
-    registered_at: str = field(init=False, default="")
+    registered_at: str = field(default="")
 
     def __post_init__(self):
         now = datetime.now(tz_jst)
@@ -31,3 +32,5 @@ class Asset:
         if type(self.publication_date) and not self.publication_date:
             print(f"{type(self.publication_date)=}\n{self.publication_date=}")
             self.publication_date = None
+        pattern = "【(.+?)】"
+        self.title = re.sub(pattern, "", self.title)
