@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
 
@@ -63,6 +65,17 @@ def test_POST_registration_contributors(test_client):
     response = test_client.post("/registration", data={"asin": "4873117585"})
     assert "ゼロから作るDeep Learning ―Pythonで学ぶディープラーニングの理論と実装" in response.data.decode("UTF-8")
     assert "斎藤 康毅" in response.data.decode("UTF-8")
+
+
+def test_POST_registration_publication_date_parse_failed(test_client, caplog):
+    test_client.get("/search?query=UNIX")
+    with test_client.session_transaction() as _session:
+        for product in _session['product_list']:
+            product.info.publication_date = "unsupported format"
+
+    test_client.post("/registration", data={"asin": "4274064069"})
+    assert ('__init__', logging.ERROR,
+            'registration: Parse failed. Unknown string format: unsupported format') in caplog.record_tuples
 
 
 def test_POST_register_airtable_success(test_client):

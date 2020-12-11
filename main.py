@@ -62,7 +62,11 @@ def registration():
     for product in session["product_list"]:
         if product.asin == asin:
             if product.info.publication_date:
-                product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%d-%mT%H:%M")
+                try:
+                    product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%d-%mT%H:%M")
+                except ValueError as ve:
+                    app.logger.error(f"registration: Parse failed. {ve}")
+                    product.info.publication_date = None
             if product.info.contributors:
                 product.info.contributors = ", ".join(
                     [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name else contributor.name
