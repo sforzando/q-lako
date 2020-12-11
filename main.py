@@ -4,6 +4,7 @@ from hashlib import sha256
 
 import requests
 from amazon.exception import AmazonException
+from dateutil.parser import parse
 from flask import redirect, request, render_template, url_for, session
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -108,9 +109,16 @@ def registration():
 
     for product in session["product_list"]:
         if product.asin == asin:
+            if product.info.publication_date:
+                try:
+                    product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%d-%mT%H:%M")
+                except ValueError as ve:
+                    app.logger.error(f"registration: Parse failed. {ve}")
+                    product.info.publication_date = None
             if product.info.contributors:
                 product.info.contributors = ", ".join(
-                    [contributor.name for contributor in product.info.contributors])
+                    [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name else contributor.name
+                     for contributor in product.info.contributors])
             if product.product.features:
                 product.product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"

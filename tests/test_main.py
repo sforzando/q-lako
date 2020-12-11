@@ -1,3 +1,4 @@
+import logging
 from configparser import ConfigParser
 from hashlib import sha256
 
@@ -16,7 +17,7 @@ class AuthActions(object):
         self._client = client
 
     def login(
-            self, user_id=config_parser.get("ACCOUNT", "user_id"), password=config_parser.get("ACCOUNT", "password")):
+        self, user_id=config_parser.get("ACCOUNT", "user_id"), password=config_parser.get("ACCOUNT", "password")):
         return self._client.post(
             "/login", data={"user_id": user_id, "password": password}, follow_redirects=True
         )
@@ -123,6 +124,17 @@ def test_POST_registration_contributors(authenticated_client):
     response = authenticated_client.post("/registration", data={"asin": "4873117585"})
     assert "ゼロから作るDeep Learning ―Pythonで学ぶディープラーニングの理論と実装" in response.data.decode("UTF-8")
     assert "斎藤 康毅" in response.data.decode("UTF-8")
+
+
+def test_POST_registration_publication_date_parse_failed(authenticated_client, caplog):
+    authenticated_client.get("/search?query=UNIX")
+    with authenticated_client.session_transaction() as _session:
+        for product in _session["product_list"]:
+            product.info.publication_date = "unsupported format"
+
+    authenticated_client.post("/registration", data={"asin": "4274064069"})
+    assert ("__init__", logging.ERROR,
+            "registration: Parse failed. Unknown string format: unsupported format") in caplog.record_tuples
 
 
 def test_POST_register_airtable_success(authenticated_client):
