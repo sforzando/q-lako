@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
 
@@ -47,9 +49,9 @@ def test_GET_registration_direct_access(test_client):
 
 
 def test_POST_registration_success(test_client):
-    test_client.get("/search?query=サーカスTC")
-    response = test_client.post("/registration", data={"asin": "B07XB5WX89"})
-    assert "Registration for details of テンマクデザイン サーカス TC DX" in response.data.decode("UTF-8")
+    test_client.get("/search?query=UNIX")
+    response = test_client.post("/registration", data={"asin": "4274064069"})
+    assert "Registration for details of UNIXという考え方―その設計思想と哲学" in response.data.decode("UTF-8")
 
 
 def test_POST_registration_failure(test_client):
@@ -65,22 +67,33 @@ def test_POST_registration_contributors(test_client):
     assert "斎藤 康毅" in response.data.decode("UTF-8")
 
 
+def test_POST_registration_publication_date_parse_failed(test_client, caplog):
+    test_client.get("/search?query=UNIX")
+    with test_client.session_transaction() as _session:
+        for product in _session["product_list"]:
+            product.info.publication_date = "unsupported format"
+
+    test_client.post("/registration", data={"asin": "4274064069"})
+    assert ("__init__", logging.ERROR,
+            "registration: Parse failed. Unknown string format: unsupported format") in caplog.record_tuples
+
+
 def test_POST_register_airtable_success(test_client):
     imd = ImmutableMultiDict(
         [
-            ('image_url', 'https://m.media-amazon.com/images/I/210tcugW9ML.jpg'),
-            ('title', 'テンマクデザイン サーカス TC DX'),
-            ('url', 'https://www.amazon.co.jp/dp/B07XB5WX89?tag=bellonieslog-22&linkCode=osi&th=1&psc=1'),
-            ('asin', 'B07XB5WX89'),
-            ('manufacturer', 'テンマクデザイン'),
-            ('contributors', None),
-            ('publication_date', None),
-            ('product_group', 'Sports'),
-            ('registrants_name', 'yusuke-sforzando'),
-            ('default_positions', 'sforzando-kawasaki'),
-            ('current_positions', 'sforzando-kawasaki'),
-            ('note', ''),
-            ('features', "['サーカスTC DX\\u3000サンドカラー', '【サーカスTCと共通 ●設営が簡単に出来るセットアップガイド付。']")
+            ("image_url", "https://m.media-amazon.com/images/I/210tcugW9ML.jpg"),
+            ("title", "テンマクデザイン サーカス TC DX"),
+            ("url", "https://www.amazon.co.jp/dp/B07XB5WX89?tag=bellonieslog-22&linkCode=osi&th=1&psc=1"),
+            ("asin", "B07XB5WX89"),
+            ("manufacturer", "テンマクデザイン"),
+            ("contributors", None),
+            ("publication_date", None),
+            ("product_group", "Sports"),
+            ("registrants_name", "yusuke-sforzando"),
+            ("default_positions", "sforzando-kawasaki"),
+            ("current_positions", "sforzando-kawasaki"),
+            ("note", ""),
+            ("features", "['サーカスTC DX\\u3000サンドカラー', '【サーカスTCと共通 ●設営が簡単に出来るセットアップガイド付。']")
         ]
     )
     test_client.get("/search?query=サーカスTC")

@@ -4,6 +4,7 @@
     "appengine",
     "asdict",
     "astimezone",
+    "dateutil",
     "dotenv",
     "gcloud",
     "key",

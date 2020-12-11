@@ -21,8 +21,8 @@ Session(app)
 
 app.config["THEME_COLOR_GRAY"] = config_parser.get("THEME-COLOR", "theme_color_gray")
 app.config["AIRTABLE_TABLE_NAME"] = config_parser.get("AIRTABLE", "airtable_table_name")
-app.config["ASSET_POSITIONS"] = config_parser.get("ASSET-PROPERTY", "positions").split(',')
-app.config["ASSET_REGISTRANTS"] = config_parser.get("ASSET-PROPERTY", "registrants").split(',')
+app.config["ASSET_POSITIONS"] = config_parser.get("ASSET-PROPERTY", "positions").split(",")
+app.config["ASSET_REGISTRANTS"] = config_parser.get("ASSET-PROPERTY", "registrants").split(",")
 
 amazon_api_client = AmazonAPI(os.getenv("amazon_access_key"),
                               os.getenv("amazon_secret_key"),

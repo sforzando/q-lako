@@ -2,6 +2,7 @@
 
 import requests
 from amazon.exception import AmazonException
+from dateutil.parser import parse
 from flask import request, render_template, url_for, session
 
 from __init__ import app, amazon_api_client
@@ -19,7 +20,7 @@ def index():
 @app.route("/search", methods=["GET"])
 def search():
     app.logger.info(f"search(): GET {request.full_path}")
-    keyword = request.args.get('query', None)
+    keyword = request.args.get("query", None)
 
     if not keyword:
         return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
@@ -60,9 +61,16 @@ def registration():
 
     for product in session["product_list"]:
         if product.asin == asin:
+            if product.info.publication_date:
+                try:
+                    product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%d-%mT%H:%M")
+                except ValueError as ve:
+                    app.logger.error(f"registration: Parse failed. {ve}")
+                    product.info.publication_date = None
             if product.info.contributors:
                 product.info.contributors = ", ".join(
-                    [contributor.name for contributor in product.info.contributors])
+                    [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name else contributor.name
+                     for contributor in product.info.contributors])
             if product.product.features:
                 product.product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"
