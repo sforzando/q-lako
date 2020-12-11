@@ -44,11 +44,10 @@
         </div>
         <div class="mt-2">
           <label class="mt-2 mx-4" for="publication_date">Publication date:
-            <span class="text-yellow-500 text-xs font-extralight"> e.g. "2020/12/31"</span>
+            <span class="text-yellow-500 text-xs font-extralight"> e.g. "2020/08/31 13:57"</span>
           </label>
-          <input class="ml-4 px-2 py-2 w-11/12 border-solid border-2 border-gray-500 rounded-md" type="date"
-            name="publication_date" id="publication_date" value="{{ session.product.info.publication_date or '' }}"
-            pattern="^[0-9]{4}/[0-9]{2}/[0-9]{2}$" />
+          <input class="ml-4 px-2 py-2 w-11/12 border-solid border-2 border-gray-500 rounded-md" type="datetime-local"
+            name="publication_date" id="publication_date" value="{{ session.product.info.publication_date or '' }}" />
         </div>
         <div class="mt-2">
           <label class="mt-2 mx-4" for="product_group">Product group:</label>
