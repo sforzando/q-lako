@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_login import LoginManager
 from flask_session import Session
+from flask_wtf.csrf import CSRFProtect
 
 from user import User
 
@@ -16,6 +17,7 @@ config_parser.read("settings.ini", encoding="utf8")
 
 app = Flask(__name__)
 app.secret_key = secrets.token_bytes(32)
+csrf = CSRFProtect(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)

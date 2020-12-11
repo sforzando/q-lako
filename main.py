@@ -8,6 +8,7 @@ from dateutil.parser import parse
 from flask import redirect, request, render_template, url_for, session
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFError
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
 
@@ -21,6 +22,11 @@ from user import User
 class LoginForm(FlaskForm):
     user_id = StringField("user_id", validators=[DataRequired()])
     password = PasswordField("password", validators=[DataRequired()])
+
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    return FlashMessage.show_with_redirect(e.description, FlashCategories.ERROR, url_for("login")), 400
 
 
 @app.route("/login", methods=["GET", "POST"])
