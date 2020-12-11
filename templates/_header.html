@@ -7,9 +7,10 @@
       </a>
     </div>
     {% if current_user.is_authenticated %}
-    <div>
-      <button class="text-white mr-2" onclick="location.href='logout'">Log out
-        <span class="text-xl theme-color-blue ml-1">{{ current_user.get_id() }}</span>
+    <div class="w-1/2 sm:w-auto mr-2">
+      <button class="flex flex-wrap items-center" onclick="location.href='logout'">
+        <span class="ml-auto text-white">Log out</span>
+        <span class="ml-auto sm:ml-2 text-xl theme-color-blue">{{ current_user.get_id() }}</span>
       </button>
     </div>
     {% endif %}
