@@ -1,10 +1,8 @@
 # !/usr/bin/env python3
 
-import re
-from datetime import datetime as dt
-
 import requests
 from amazon.exception import AmazonException
+from dateutil.parser import parse
 from flask import request, render_template, url_for, session
 
 from __init__ import app, amazon_api_client
@@ -64,17 +62,7 @@ def registration():
     for product in session["product_list"]:
         if product.asin == asin:
             if product.info.publication_date:
-                # Replace timezone from `Z` to `+00:00`
-                if re.search(r"\d{4}-\d{2}-\d{2}(\s|T)\d{2}:\d{2}(:\d{2}(\.\d{3,6})?)?Z",
-                             product.info.publication_date):
-                    product.info.publication_date = product.info.publication_date.replace("Z", "+00:00")
-                # Check datetime format from Amazon PA-API and pick valid pattern only
-                matched_str_datetime = re.search(
-                    r"\d{4}-\d{2}-\d{2}(\s|T)\d{2}:\d{2}(:\d{2}(\.\d{3,6})?)?((\+|-)\d{2}:\d{2})?",
-                    product.info.publication_date)
-                # Format datetime to `%Y-%d-%mT%H:%M` for `<input type="datetime-local">`
-                product.info.publication_date = dt.fromisoformat(
-                    matched_str_datetime.group()).strftime("%Y-%d-%mT%H:%M") if matched_str_datetime else None
+                product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%d-%mT%H:%M")
             if product.info.contributors:
                 product.info.contributors = ", ".join(
                     [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name else contributor.name
