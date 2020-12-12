@@ -83,5 +83,9 @@ def load_user(user_id):
 
 @app.before_request
 def check_csrf():
+    app.logger.info(f"{current_user.is_authenticated=}")
     if not current_user.is_authenticated and app.config.get("WTF_CSRF_ENABLED"):
+        app.logger.info("Protected")
         csrf.protect()
+    else:
+        app.logger.info("Not protected")
