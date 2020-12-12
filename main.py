@@ -38,7 +38,6 @@ def check_csrf_validate(csrf_token=""):
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e):
     app.logger.error(e)
-    check_csrf_validate(g.csrf_token)
     return FlashMessage.show_with_redirect(e.description, FlashCategories.ERROR, url_for("login"))
 
 
