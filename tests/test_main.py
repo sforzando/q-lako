@@ -17,7 +17,7 @@ class AuthActions(object):
         self._client = client
 
     def login(
-        self, user_id=config_parser.get("ACCOUNT", "user_id"), password=config_parser.get("ACCOUNT", "password")):
+            self, user_id=config_parser.get("ACCOUNT", "user_id"), password=config_parser.get("ACCOUNT", "password")):
         return self._client.post(
             "/login", data={"user_id": user_id, "password": password}, follow_redirects=True
         )

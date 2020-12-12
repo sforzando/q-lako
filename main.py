@@ -82,10 +82,9 @@ def search():
     context_dict = {
         "subtitle": f"Search results for {keyword}",
         "keyword": keyword,
-        "form": FlaskForm()
     }
     try:
-        session["product_list"] = amazon_api_client.search_products(keywords=keyword, item_count=30)
+        session["product_list"] = amazon_api_client.search_products(keywords=keyword, item_count=9)
         return render_template("search.html", **context_dict)
     except AmazonException as ae:
         app.logger.error(ae)
@@ -95,9 +94,7 @@ def search():
 @app.route("/registration", methods=["GET", "POST"])
 @login_required
 def registration():
-    context_dict = {
-        "form": FlaskForm()
-    }
+    context_dict = {}
     if request.method == "GET":
         app.logger.info(f"registration: GET {request.full_path}")
         if session.get("product", None):
@@ -106,34 +103,33 @@ def registration():
         else:
             return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
 
-    if context_dict["form"].validate_on_submit():
-        app.logger.info("registration: POST /registration")
-        app.logger.debug(f"{request.form=}")
-        asin = request.form.get("asin", "")
+    app.logger.info("registration: POST /registration")
+    app.logger.debug(f"{request.form=}")
+    asin = request.form.get("asin", "")
 
-        if not asin or not session.get("product_list", None):
-            return FlashMessage.show_with_redirect(
-                "Please try the procedure again from the beginning, sorry for the inconvenience.",
-                FlashCategories.WARNING,
-                url_for("index"))
+    if not asin or not session.get("product_list", None):
+        return FlashMessage.show_with_redirect(
+            "Please try the procedure again from the beginning, sorry for the inconvenience.",
+            FlashCategories.WARNING,
+            url_for("index"))
 
-        for product in session["product_list"]:
-            if product.asin == asin:
-                session["product"] = deepcopy(product)
-                if product.info.publication_date:
-                    try:
-                        session["product"].info.publication_date = parse(
-                            product.info.publication_date).strftime("%Y-%m-%dT%H:%M")
-                    except ValueError as ve:
-                        app.logger.error(f"registration: Parse failed. {ve}")
-                        session["product"].info.publication_date = None
-                if product.info.contributors:
-                    session["product"].info.contributors = ", ".join(
-                        [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name
-                         else contributor.name for contributor in product.info.contributors])
-                if product.product.features:
-                    session["product"].product.features = "\n".join(product.product.features)
-                context_dict["subtitle"] = f"Registration for details of {product.title}"
+    for product in session["product_list"]:
+        if product.asin == asin:
+            session["product"] = deepcopy(product)
+            if product.info.publication_date:
+                try:
+                    session["product"].info.publication_date = parse(
+                        product.info.publication_date).strftime("%Y-%m-%dT%H:%M")
+                except ValueError as ve:
+                    app.logger.error(f"registration: Parse failed. {ve}")
+                    session["product"].info.publication_date = None
+            if product.info.contributors:
+                session["product"].info.contributors = ", ".join(
+                    [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name
+                        else contributor.name for contributor in product.info.contributors])
+            if product.product.features:
+                session["product"].product.features = "\n".join(product.product.features)
+            context_dict["subtitle"] = f"Registration for details of {product.title}"
 
     if session.get("product", None):
         return render_template("registration.html", **context_dict)
@@ -149,9 +145,7 @@ def registration():
 def register_airtable():
     app.logger.info("register_airtable(): POST /register_airtable")
     app.logger.debug(f"{request.form=}")
-    form = FlaskForm()
-    if form.validate_on_submit():
-        posted_asset = request.form.to_dict() if request.form else {}
+    posted_asset = request.form.to_dict() if request.form else {}
 
     if not posted_asset:
         return FlashMessage.show_with_redirect(
