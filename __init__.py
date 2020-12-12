@@ -5,9 +5,8 @@ from configparser import ConfigParser
 from amazon.paapi import AmazonAPI
 from dotenv import load_dotenv
 from flask import Flask
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager
 from flask_session import Session
-from flask_wtf.csrf import CSRFProtect
 
 from user import User
 
@@ -32,7 +31,6 @@ app.config.from_object(__name__)
 Session(app)
 
 app.config["WTF_CSRF_ENABLED"] = False
-csrf = CSRFProtect(app)
 
 app.config["THEME_COLOR_GRAY"] = config_parser.get("THEME-COLOR", "theme_color_gray")
 app.config["AMAZON_ITEM_COUNT"] = int(config_parser.get("AMAZON_API", "item_count"))
@@ -79,9 +77,3 @@ else:
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
-
-
-@app.before_request
-def check_csrf():
-    if not current_user.is_authenticated and app.config.get("WTF_CSRF_ENABLED"):
-        csrf.protect()
