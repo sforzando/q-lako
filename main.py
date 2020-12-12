@@ -26,6 +26,8 @@ class LoginForm(FlaskForm):
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e):
+    logout_user()
+    session.pop("csrf_token", None)
     return FlashMessage.show_with_redirect(e.description, FlashCategories.ERROR, url_for("login"))
 
 
