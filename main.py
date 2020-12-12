@@ -6,7 +6,7 @@ from hashlib import sha256
 import requests
 from amazon.exception import AmazonException
 from dateutil.parser import parse
-from flask import redirect, request, render_template, url_for, session, g
+from flask import redirect, request, render_template, url_for, session
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFError, validate_csrf, ValidationError
