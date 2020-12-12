@@ -17,17 +17,17 @@
   </div>
 </div>
 <div class="flex flex-wrap justify-evenly text-center">
-  {% for product in session.product_list %}
-  <div class="flex flex-col m-2 border-2 rounded-sm max-w-xs justify-center p-2 w-full xl:w-3/12">
-    <form action="/registration" method="post">
+  <form action="/registration" method="post">
+    {% for product in session.product_list %}
+    <div class="flex flex-col m-2 border-2 rounded-sm max-w-xs justify-center p-2 w-full xl:w-3/12">
       {{ form.hidden_tag() }}
       <input type="hidden" name="asin" value="{{ product.asin }}" />
       <button>
         <image class="object-contain h-64 w-auto m-auto" src="{{ product.images.large }}" alt="image of {{ product.title }}" />
         <h2 class="flex-grow text-lg theme-color-gray mt-2 mx-2">{{ product.title }}</h2>
       </button>
-    </form>
-  </div>
-  {%- endfor %}
+    </div>
+    {%- endfor %}
+  </form>
 </div>
 {% endblock %}
