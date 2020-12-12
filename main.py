@@ -6,10 +6,10 @@ from hashlib import sha256
 import requests
 from amazon.exception import AmazonException
 from dateutil.parser import parse
-from flask import redirect, request, render_template, url_for, session
+from flask import redirect, request, render_template, url_for, session, g
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_wtf import FlaskForm
-from flask_wtf.csrf import CSRFError
+from flask_wtf.csrf import CSRFError, validate_csrf, ValidationError
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
 
@@ -24,9 +24,21 @@ class LoginForm(FlaskForm):
     password = PasswordField("password", validators=[DataRequired()])
 
 
+def check_csrf_validate(csrf_token=""):
+    app.logger.info(f"check_csrf_validate:\n{csrf_token=}\n{app.config['SECRET_KEY']=}")
+    validated = False
+    try:
+        validate_csrf(csrf_token, secret_key=app.config['SECRET_KEY'], time_limit=3600)
+        validated = True
+    except ValidationError as ve:
+        app.logger.error(ve)
+    app.logger.info(f"check_csrf_validate: {validated=}")
+
+
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e):
     app.logger.error(e)
+    check_csrf_validate(g.csrf_token)
     return FlashMessage.show_with_redirect(e.description, FlashCategories.ERROR, url_for("login"))
 
 
@@ -41,6 +53,7 @@ def login():
         return render_template("login.html", login_form=login_form)
     else:
         app.logger.info("login(): POST /login")
+        check_csrf_validate(request.form.get("csrf_token"))
         if login_form.validate_on_submit():
             user_id = login_form.user_id.data
             password = sha256(login_form.password.data.encode("UTF-8")).hexdigest()
@@ -105,6 +118,7 @@ def registration():
             return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
 
     app.logger.info("registration: POST /registration")
+    check_csrf_validate(request.form.get("csrf_token"))
     app.logger.debug(f"{request.form=}")
     asin = request.form.get("asin", "")
 
@@ -145,6 +159,7 @@ def registration():
 @login_required
 def register_airtable():
     app.logger.info("register_airtable(): POST /register_airtable")
+    check_csrf_validate(request.form.get("csrf_token"))
     app.logger.debug(f"{request.form=}")
     posted_asset = request.form.to_dict() if request.form else {}
 
