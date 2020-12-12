@@ -31,7 +31,8 @@ SESSION_FILE_DIR = "/tmp"
 app.config.from_object(__name__)
 Session(app)
 
-WTF_CSRF_SECRET_KEY = "WTF_CSRF_SECRET_KEY"
+WTF_CSRF_ENABLED = False
+WTF_CSRF_CHECK_DEFAULT = False
 csrf = CSRFProtect(app)
 
 app.config["THEME_COLOR_GRAY"] = config_parser.get("THEME-COLOR", "theme_color_gray")
