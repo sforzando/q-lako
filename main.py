@@ -1,5 +1,6 @@
 # !/usr/bin/env python3
 
+from copy import deepcopy
 from hashlib import sha256
 
 import requests
@@ -84,8 +85,7 @@ def search():
         "form": FlaskForm()
     }
     try:
-        product_list = amazon_api_client.search_products(keywords=keyword, item_count=30)
-        session["product_list"] = product_list if product_list else []
+        session["product_list"] = amazon_api_client.search_products(keywords=keyword, item_count=30)
         return render_template("search.html", **context_dict)
     except AmazonException as ae:
         app.logger.error(ae)
@@ -119,20 +119,21 @@ def registration():
 
         for product in session["product_list"]:
             if product.asin == asin:
+                session["product"] = deepcopy(product)
                 if product.info.publication_date:
                     try:
-                        product.info.publication_date = parse(product.info.publication_date).strftime("%Y-%m-%dT%H:%M")
+                        session["product"].info.publication_date = parse(
+                            product.info.publication_date).strftime("%Y-%m-%dT%H:%M")
                     except ValueError as ve:
                         app.logger.error(f"registration: Parse failed. {ve}")
-                        product.info.publication_date = None
+                        session["product"].info.publication_date = None
                 if product.info.contributors:
-                    product.info.contributors = ", ".join(
+                    session["product"].info.contributors = ", ".join(
                         [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name
-                            else contributor.name for contributor in product.info.contributors])
+                         else contributor.name for contributor in product.info.contributors])
                 if product.product.features:
-                    product.product.features = "\n".join(product.product.features)
+                    session["product"].product.features = "\n".join(product.product.features)
                 context_dict["subtitle"] = f"Registration for details of {product.title}"
-                session["product"] = product
 
     if session.get("product", None):
         return render_template("registration.html", **context_dict)
