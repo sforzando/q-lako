@@ -84,7 +84,8 @@ def search():
         "keyword": keyword,
     }
     try:
-        session["product_list"] = amazon_api_client.search_products(keywords=keyword, item_count=9)
+        session["product_list"] = amazon_api_client.search_products(keywords=keyword,
+                                                                    item_count=app.config.get("AMAZON_ITEM_COUNT", 10))
         return render_template("search.html", **context_dict)
     except AmazonException as ae:
         app.logger.error(ae)

@@ -32,6 +32,7 @@ def test_client():
     app.config["WTF_CSRF_ENABLED"] = False
     app.config["ACCOUNTS"] = ((config_parser.get("ACCOUNT", "user_id"),
                                sha256(config_parser.get("ACCOUNT", "password").encode("UTF-8")).hexdigest()),)
+    app.config["AMAZON_ITEM_COUNT"] = int(config_parser.get("AMAZON_API", "item_count"))
     return app.test_client()
 
 

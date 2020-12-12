@@ -95,6 +95,9 @@ Keep your passphrase in a secure location like [YubiKey](https://www.yubico.com)
 theme_color_blue=#4caaba
 theme_color_gray=#393e46
 
+[AMAZON_API]
+item_count=30
+
 [AIRTABLE]
 airtable_table_name=q-lako
 
@@ -134,6 +137,9 @@ flake8 *.py
    [ACCOUNT]
    user_id=account_for_test
    password=password_for_test
+
+   [AMAZON_API]
+   item_count=3
    ```
 
 1. `pytest . -vv --ignore-glob="venv/**/*" --durations=0`

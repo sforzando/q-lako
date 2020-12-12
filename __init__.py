@@ -31,6 +31,7 @@ app.config.from_object(__name__)
 Session(app)
 
 app.config["THEME_COLOR_GRAY"] = config_parser.get("THEME-COLOR", "theme_color_gray")
+app.config["AMAZON_ITEM_COUNT"] = int(config_parser.get("AMAZON_API", "item_count"))
 app.config["AIRTABLE_TABLE_NAME"] = config_parser.get("AIRTABLE", "airtable_table_name")
 app.config["ASSET_POSITIONS"] = config_parser.get("ASSET-PROPERTY", "positions").split(",")
 app.config["ASSET_REGISTRANTS"] = config_parser.get("ASSET-PROPERTY", "registrants").split(",")
