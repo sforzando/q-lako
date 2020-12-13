@@ -22,9 +22,10 @@ registerable_asset = Asset(
 
 
 @pytest.fixture
-def airtable_client():
-    airtable_client = AirtableClient()
-    return airtable_client
+def airtable_client(flask_app_context):
+    with flask_app_context:
+        airtable_client = AirtableClient()
+        return airtable_client
 
 
 def test_api_key():
@@ -45,8 +46,9 @@ def test_register(airtable_client):
     assert airtable_client.register_asset(registerable_asset)
 
 
-def test_register_non_existent_key(airtable_client):
+def test_register_non_existent_key(airtable_client, flask_app_context):
     """Testing an instance of the Airtable data class is an argument."""
 
-    with pytest.raises(TypeError):
-        airtable_client.register_asset({"test": "test"})
+    with flask_app_context:
+        with pytest.raises(TypeError):
+            airtable_client.register_asset({"test": "test"})

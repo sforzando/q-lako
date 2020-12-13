@@ -1,31 +1,32 @@
 {% extends "_base.html" %} {% block main %}
 <div class="text-center">
   <h1 class="text-4xl theme-color-gray font-bold mt-4">Search Results</h1>
-  <div class="flex flex-wrap justify-start lg:justify-center items-center my-2">
-    <p class="ml-4 mt-2 text-left">
+  <div class="flex flex-wrap justify-center items-center my-2">
+    <p class="ml-4 mt-2">
       <span class="text-lg">Item Hits: </span>
       <span class="text-2xl theme-color-gray font-bold">
         {{ session.product_list|count if session.product_list else "0" }}
       </span>
     </p>
-    <p class="ml-4 mt-2 text-left">
+    <p class="ml-4 mt-2">
       <span class="text-lg">Keyword: </span>
       <span class="text-2xl theme-color-gray font-bold">{{ keyword }}</span>
     </p>
-    <button onClick="history.back()"
-      class="cursor-pointer mx-auto lg:mx-4 mt-2 px-10 py-2 rounded-full bg-gray-200">Change keyword</button>
+    <button onClick="location.href='/'"
+      class="cursor-pointer mx-4 mt-2 px-10 py-2 rounded-full bg-gray-200">Change keyword</button>
   </div>
 </div>
-<div class="flex flex-wrap justify-evenly text-center">
+<div class="flex flex-wrap justify-evenly items-center text-center">
   {% for product in session.product_list %}
-  <div class="flex flex-col m-2 border-2 rounded-sm max-w-xs">
-    <image class="object-contain h-64 w-auto m-2" src="{{ product.images.large }}" alt="image of {{ product.title }}" />
-    <h2 class="flex-grow text-lg theme-color-gray mx-2">{{ product.title }}</h2>
-    <form action="/registration" method="post">
+  <form class="w-full md:w-1/2 xl:w-1/3" action="/registration" method="post">
+    <div class="border-2 rounded-sm max-w-xs p-2 mx-auto my-2">
       <input type="hidden" name="asin" value="{{ product.asin }}" />
-      <button class="cursor-pointer my-5 px-10 py-2 theme-bg-color-blue rounded-full">Select</button>
-    </form>
-  </div>
+      <button>
+        <image class="object-contain h-64 w-auto m-auto" src="{{ product.images.large }}" alt="image of {{ product.title }}" />
+        <h2 class="flex-grow text-lg theme-color-gray mt-2 mx-2">{{ product.title }}</h2>
+      </button>
+    </div>
+  </form>
   {%- endfor %}
 </div>
 {% endblock %}
