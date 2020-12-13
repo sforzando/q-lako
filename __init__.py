@@ -8,9 +8,8 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_session import Session
 
-from user import User
-
 from airtable_client import AirtableClient
+from user import User
 
 load_dotenv(verbose=True)
 config_parser = ConfigParser()

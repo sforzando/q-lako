@@ -97,8 +97,7 @@ def registration():
         else:
             return FlashMessage.show_with_redirect("Enter any keywords.", FlashCategories.WARNING, url_for("index"))
 
-    app.logger.info("registration: POST /registration")
-    app.logger.debug(f"{request.form=}")
+    app.logger.info(f"registration: POST /registration {request.form=}")
     asin = request.form.get("asin", "")
 
     if not asin or not session.get("product_list", None):
@@ -120,7 +119,7 @@ def registration():
             if product.info.contributors:
                 session["product"].info.contributors = ", ".join(
                     [" ".join(reversed(contributor.name.split(", "))) if "," in contributor.name
-                        else contributor.name for contributor in product.info.contributors])
+                     else contributor.name for contributor in product.info.contributors])
             if product.product.features:
                 session["product"].product.features = "\n".join(product.product.features)
             context_dict["subtitle"] = f"Registration for details of {product.title}"
@@ -137,8 +136,7 @@ def registration():
 @app.route("/register_airtable", methods=["POST"])
 @login_required
 def register_airtable():
-    app.logger.info("register_airtable(): POST /register_airtable")
-    app.logger.debug(f"{request.form=}")
+    app.logger.info(f"register_airtable(): POST /register_airtable {request.form=}")
     posted_asset = request.form.to_dict() if request.form else {}
 
     if not posted_asset:
@@ -147,21 +145,21 @@ def register_airtable():
             FlashCategories.WARNING,
             url_for("index"))
     else:
-        publication_date = posted_asset.get("publication_date", None)
+        publication_date = posted_asset.get("publication_date")
         registrable_asset = Asset(
-            title=posted_asset.get("title", None),
-            asin=posted_asset.get("asin", None),
-            url=posted_asset.get("url", None),
-            images=[{"url": posted_asset.get("image_url", None)}],
-            manufacture=posted_asset.get("manufacturer", None),
-            contributor=posted_asset.get("contributors", None),
-            product_group=posted_asset.get("product_group", None),
+            title=posted_asset.get("title"),
+            asin=posted_asset.get("asin"),
+            url=posted_asset.get("url"),
+            images=[{"url": posted_asset.get("image_url")}],
+            manufacture=posted_asset.get("manufacturer"),
+            contributor=posted_asset.get("contributors"),
+            product_group=posted_asset.get("product_group"),
             publication_date=parse(publication_date).strftime("%Y-%m-%d %H:%M") if publication_date else None,
-            features=posted_asset.get("features", None),
-            default_position=posted_asset.get("default_positions", None),
-            current_position=posted_asset.get("current_positions", None),
-            note=posted_asset.get("note", None),
-            registrant_name=posted_asset.get("registrants_name", None))
+            features=posted_asset.get("features"),
+            default_position=posted_asset.get("default_positions"),
+            current_position=posted_asset.get("current_positions"),
+            note=posted_asset.get("note"),
+            registrant_name=posted_asset.get("registrants_name"))
 
     try:
         airtable_client.register_asset(registrable_asset)
